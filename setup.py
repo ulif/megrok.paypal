@@ -15,6 +15,9 @@ long_description = (
 
 install_requires = [
     'setuptools',
+    'zope.i18nmessageid',
+    'zope.interface',
+    'zope.schema',
     ]
 
 
