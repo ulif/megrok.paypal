@@ -45,7 +45,7 @@ PAYMENT_STATES_DICT = dict(
 
 
 class PaymentStatesVocabularyFactory(grok.GlobalUtility):
-    grok.provides(IVocabularyFactory)
+    grok.implements(IVocabularyFactory)
     grok.name("megrok.paypal.payment_states")
 
     def __call__(self, context):
