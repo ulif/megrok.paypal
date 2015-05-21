@@ -57,7 +57,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
-    test_suite='megrok.paypal.tests.test_megrok_paypal.test_suite',
     tests_require=tests_require,
-    extras_require={'test': tests_require},
+    extras_require=dict(foo=tests_require)
 )
