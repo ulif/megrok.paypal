@@ -60,5 +60,5 @@ setup(
     zip_safe=False,
     install_requires=install_requires,
     tests_require=tests_require,
-    extras_require=dict(foo=tests_require)
+    extras_require=dict(test=tests_require)
 )
