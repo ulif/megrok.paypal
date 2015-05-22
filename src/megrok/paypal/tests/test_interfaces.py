@@ -45,9 +45,21 @@ class TestInterfacesModule(unittest.TestCase):
         verifyClass(IVocabularyFactory, PaymentStatesVocabularyFactory)
         verifyObject(IVocabularyFactory, factory)
 
+    def test_charsets_vocab_factory_fullfills_iface(self):
+        # the charsets vocab factory fullfills interface contracts.
+        factory = CharsetsVocabularyFactory()
+        verifyClass(IVocabularyFactory, CharsetsVocabularyFactory)
+        verifyObject(IVocabularyFactory, factory)
+
     def test_payment_states_vocab_fullfills_iface(self):
         # the delivered vocabulary fullfills all interface contracts
         factory = PaymentStatesVocabularyFactory()
+        vocab = factory(context=None)
+        verifyObject(IVocabulary, vocab)
+
+    def test_charsets_vocab_fullfills_iface(self):
+        # the delivered vocabulary fullfills all interface contracts
+        factory = CharsetsVocabularyFactory()
         vocab = factory(context=None)
         verifyObject(IVocabulary, vocab)
 
