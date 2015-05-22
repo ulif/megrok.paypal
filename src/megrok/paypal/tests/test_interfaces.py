@@ -5,7 +5,9 @@ from zope.component import queryUtility, getUtility, globalSiteManager
 from zope.schema.interfaces import IVocabularyFactory, IVocabulary
 from zope.i18nmessageid import MessageFactory
 from zope.interface.verify import verifyObject, verifyClass
-from megrok.paypal.interfaces import _, PaymentStatesVocabularyFactory
+from megrok.paypal.interfaces import (
+    _, PaymentStatesVocabularyFactory, CharsetsVocabularyFactory
+)
 
 
 class TestInterfacesModule(unittest.TestCase):
@@ -28,6 +30,14 @@ class TestInterfacesModule(unittest.TestCase):
                             name="megrok.paypal.payment_states")
         assert util is not None
         assert isinstance(util, PaymentStatesVocabularyFactory)
+
+    def test_charsets_vocab_retrievable(self):
+        # we can get a payment states vocab as a named utility
+        grok.testing.grok("megrok.paypal.interfaces")
+        util = queryUtility(IVocabularyFactory,
+                            name="megrok.paypal.charsets")
+        assert util is not None
+        assert isinstance(util, CharsetsVocabularyFactory)
 
     def test_payment_states_vocab_factory_fullfills_iface(self):
         # the payment states vocab factory fullfills interface contracts.
