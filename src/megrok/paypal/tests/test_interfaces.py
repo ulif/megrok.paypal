@@ -14,10 +14,13 @@ class TestInterfacesModule(unittest.TestCase):
 
     def setUp(self):
         # make sure, grokked components are unregistered at the beginning
-        util = queryUtility(
-            IVocabularyFactory, name="megrok.paypal.payment_states")
-        if util is not None:
-            globalSiteManager.unregisterUtility(util)
+        for name in [
+                "megrok.paypal.payment_states",
+                "megrok.paypal.charsets"]:
+            util = queryUtility(
+                IVocabularyFactory, name=name)
+            if util is not None:
+                globalSiteManager.unregisterUtility(util)
 
     def test_message_factory(self):
         # the interfaces module provides a message factory.
