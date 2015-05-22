@@ -1,13 +1,20 @@
 # Tests for megrok.paypal.interfaces
 import grok
 import unittest
-from zope.component import queryUtility, getUtility
+from zope.component import queryUtility, getUtility, globalSiteManager
 from zope.schema.interfaces import IVocabularyFactory, IVocabulary
 from zope.i18nmessageid import MessageFactory
 from zope.interface.verify import verifyObject, verifyClass
 from megrok.paypal.interfaces import _, PaymentStatesVocabularyFactory
 
 class TestInterfacesModule(unittest.TestCase):
+
+    def setUp(self):
+        # make sure, grokked components are unregistered at the beginning
+        util = queryUtility(
+            IVocabularyFactory, name="megrok.paypal.payment_states")
+        if util is not None:
+            globalSiteManager.unregisterUtility(util)
 
     def test_message_factory(self):
         # the interfaces module provides a message factory.
