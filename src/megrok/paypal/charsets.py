@@ -1,5 +1,6 @@
 # Charsets supported by PayPal
-# See https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/formbasics/#id08A6F0RK0PN
+# See https://developer.paypal.com/webapps/developer/docs/classic/\
+#     paypal-payments-standard/integration-guide/formbasics/#id08A6F0RK0PN
 CHARSET_BIG5 = 'Big5'
 CHARSET_EUC_JP = 'EUC-JP'
 CHARSET_EUC_KR = 'EUC-KR'
@@ -74,7 +75,7 @@ CHARSETS = [
     CHARSET_WINDOWS_1250, CHARSET_WINDOWS_1251, CHARSET_WINDOWS_1252,
     CHARSET_WINDOWS_1253, CHARSET_WINDOWS_1254, CHARSET_WINDOWS_1255,
     CHARSET_WINDOWS_1256, CHARSET_WINDOWS_1257, CHARSET_WINDOWS_1258,
-    CHARSET_WINDOWS_874,CHARSET_WINDOWS_949,
+    CHARSET_WINDOWS_874, CHARSET_WINDOWS_949,
     CHARSET_X_MAC_GREEK, CHARSET_X_MAC_TURKISH, CHARSET_X_MAC_CENTRALEURROMAN,
     CHARSET_X_MAC_CYRILLIC,
     CHARSET_EBCDIC_CP_US, CHARSET_IBM_1047
