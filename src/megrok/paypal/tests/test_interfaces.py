@@ -7,6 +7,7 @@ from zope.i18nmessageid import MessageFactory
 from zope.interface.verify import verifyObject, verifyClass
 from megrok.paypal.interfaces import _, PaymentStatesVocabularyFactory
 
+
 class TestInterfacesModule(unittest.TestCase):
 
     def setUp(self):
