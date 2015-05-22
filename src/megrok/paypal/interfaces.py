@@ -1,7 +1,10 @@
 import grok
 from zope.i18nmessageid import MessageFactory
+from zope.interface import Interface
+from zope import schema
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+from megrok.paypal.charsets import CHARSETS
 
 
 _ = MessageFactory("megrok.paypal")
@@ -44,6 +47,9 @@ PAYMENT_STATES_DICT = dict(
 )
 
 
+CHARSETS_DICT = dict([(x, _(x)) for x in CHARSETS])
+
+
 class PaymentStatesVocabularyFactory(grok.GlobalUtility):
     grok.implements(IVocabularyFactory)
     grok.name("megrok.paypal.payment_states")
@@ -54,3 +60,43 @@ class PaymentStatesVocabularyFactory(grok.GlobalUtility):
             for x in PAYMENT_STATES_DICT.items()
         ]
         return SimpleVocabulary(terms)
+
+
+class CharsetsVocabularyFactory(grok.GlobalUtility):
+    grok.implements(IVocabularyFactory)
+    grok.name("megrok.paypal.charsets")
+
+    def __call__(self, context):
+        terms = [SimpleTerm(value=x[0], token=x[0], title=x[1])
+                 for x in CHARSETS_DICT.items()]
+        return SimpleVocabulary(terms)
+
+
+class IPayPalStandardBase(Interface):
+
+    status = schema.Choice(
+        title=u"Status",
+        vocabulary="megrok.paypal.payment_states",
+        required=True,
+        )
+
+    # transaction and notification related
+    business = schema.TextLine(
+        title=u"Merchant email or id",
+        description=(
+            u"Your PayPal ID or an email address associated "
+            u"with your PayPal account. Email addresses must be confirmed."),
+        max_length=127,
+        )
+
+    charset = schema.Choice(
+        title=u"Charset",
+        description=(
+            u"Sets the character set and character encoding "
+            u"for the billing information/log-in page on the PayPal "
+            u"website. In addition, this variable sets the same values "
+            u"for information that you send to PayPal in your HTML "
+            u"button code. The default is based on the language "
+            u"encoding settings in your Account Profile."),
+        vocabulary="megrok.paypal.charsets",
+        )
