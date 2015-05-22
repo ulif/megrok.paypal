@@ -32,7 +32,7 @@ class TestInterfacesModule(unittest.TestCase):
         assert isinstance(util, PaymentStatesVocabularyFactory)
 
     def test_charsets_vocab_retrievable(self):
-        # we can get a payment states vocab as a named utility
+        # we can get a charsets vocab as a named utility
         grok.testing.grok("megrok.paypal.interfaces")
         util = queryUtility(IVocabularyFactory,
                             name="megrok.paypal.charsets")
