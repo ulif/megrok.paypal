@@ -1,3 +1,4 @@
+import decimal
 import grok
 from zope.i18nmessageid import MessageFactory
 from zope.interface import Interface
@@ -5,6 +6,7 @@ from zope import schema
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from megrok.paypal.charsets import CHARSETS
+from megrok.paypal.countries import COUNTRIES_DICT
 
 
 _ = MessageFactory("megrok.paypal")
@@ -72,6 +74,16 @@ class CharsetsVocabularyFactory(grok.GlobalUtility):
         return SimpleVocabulary(terms)
 
 
+class CountriesVocabularyFactory(grok.GlobalUtility):
+    grok.implements(IVocabularyFactory)
+    grok.name("megrok.paypal.countries")
+
+    def __call__(self, context):
+        terms = [SimpleTerm(value=x[0], token=x[0], title=x[1])
+                 for x in COUNTRIES_DICT.items()]
+        return SimpleVocabulary(terms)
+
+
 class IPayPalStandardBase(Interface):
 
     status = schema.Choice(
@@ -100,3 +112,37 @@ class IPayPalStandardBase(Interface):
             u"encoding settings in your Account Profile."),
         vocabulary="megrok.paypal.charsets",
         )
+
+    custom = schema.TextLine(
+        title=u"Custom",
+        description=(
+            u"Pass-through variable for your own tracking purposes, "
+            u"which buyers do not see."
+        ),
+        max_length=255,
+        )
+
+    notify_version = schema.Decimal(
+        title=u"notify_version",
+        default=decimal.Decimal("0.00"),
+    )
+
+    parent_txn_id = schema.Int(
+        title=u"Parent transaction ID",
+        default=0,
+    )
+
+    receiver_email = schema.TextLine(
+        title=u"???",
+        max_length=127,
+    )
+
+    receiver_id = schema.TextLine(
+        title=u"???",
+        max_length=127,
+    )
+
+    residence_country = schema.Choice(
+        title=u"Residence country",
+        vocabulary="megrok.paypal.countries",
+    )
