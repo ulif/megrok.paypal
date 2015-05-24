@@ -15,6 +15,7 @@ long_description = (
 
 install_requires = [
     'grok',
+    'iso3166',
     'setuptools',
     'zope.component',
     'zope.i18nmessageid',
