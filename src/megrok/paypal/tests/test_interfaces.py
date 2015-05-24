@@ -1,7 +1,7 @@
 # Tests for megrok.paypal.interfaces
 import grok
 import unittest
-from zope.component import queryUtility, getUtility, globalSiteManager
+from zope.component import queryUtility, globalSiteManager
 from zope.schema.interfaces import IVocabularyFactory, IVocabulary
 from zope.i18nmessageid import MessageFactory
 from zope.interface.verify import verifyObject, verifyClass
