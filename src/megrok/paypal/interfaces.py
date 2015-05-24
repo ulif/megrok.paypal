@@ -6,7 +6,9 @@ from zope import schema
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from megrok.paypal.charsets import CHARSETS
-from megrok.paypal.countries import COUNTRIES_DICT
+from megrok.paypal.countries import (
+    COUNTRIES_DICT, COUNTRY_CODES_DICT,
+)
 
 
 _ = MessageFactory("megrok.paypal")
@@ -81,6 +83,16 @@ class CountriesVocabularyFactory(grok.GlobalUtility):
     def __call__(self, context):
         terms = [SimpleTerm(value=x[0], token=x[0], title=x[1])
                  for x in COUNTRIES_DICT.items()]
+        return SimpleVocabulary(terms)
+
+
+class CountryCodesVocabularyFactory(grok.GlobalUtility):
+    grok.implements(IVocabularyFactory)
+    grok.name("megrok.paypal.countrycodes")
+
+    def __call__(self, context):
+        terms = [SimpleTerm(value=x[0], token=x[0], title=x[1])
+                 for x in COUNTRY_CODES_DICT.items()]
         return SimpleVocabulary(terms)
 
 
@@ -171,4 +183,78 @@ class IPayPalStandardBase(Interface):
     verify_sign = schema.TextLine(
         title=u"???",
         max_length=255,
+    )
+
+    #
+    # Buyer related infos
+    #
+    address_country = schema.TextLine(
+        title=u"Country",
+        max_length=64,
+    )
+
+    address_city = schema.TextLine(
+        title=u"City",
+        max_length=40,
+    )
+
+    address_country_code = schema.TextLine(
+        title=u"Country Code",
+        description=u"ISO 3166.1 country code (2-letter)",
+        max_length=64,
+    )
+
+    address_name = schema.TextLine(
+        title=u"Name",
+        max_length=128,
+    )
+
+    address_state = schema.TextLine(
+        title=u"State",
+        max_length=40,
+    )
+
+    address_status = schema.TextLine(
+        title=u"Status",
+        max_length=11,
+    )
+
+    address_street = schema.TextLine(
+        title=u"Street",
+        max_length=200,
+    )
+
+    address_zip = schema.TextLine(
+        title=u"ZIP",
+        max_length=20,
+    )
+
+    contact_phone = schema.TextLine(
+        title=u"Phone",
+        max_length=20,
+    )
+
+    first_name = schema.TextLine(
+        title=u"First Name",
+        max_length=64,
+    )
+
+    last_name = schema.TextLine(
+        title=u"Last Name",
+        max_length=64,
+    )
+
+    payer_business_name = schema.TextLine(
+        title=u"Payer Business Name",
+        max_length=127,
+    )
+
+    payer_email = schema.TextLine(
+        title=u"Payer Email",
+        max_length=127,
+    )
+
+    payer_id = schema.TextLine(
+        title=u"Payer ID",
+        max_length=13,
     )
