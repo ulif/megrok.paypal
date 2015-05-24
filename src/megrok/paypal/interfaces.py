@@ -86,6 +86,10 @@ class CountriesVocabularyFactory(grok.GlobalUtility):
 
 class IPayPalStandardBase(Interface):
 
+
+    #
+    # Transaction and notification-related vars.
+    #
     status = schema.Choice(
         title=u"Status",
         vocabulary="megrok.paypal.payment_states",
@@ -111,7 +115,7 @@ class IPayPalStandardBase(Interface):
             u"button code. The default is based on the language "
             u"encoding settings in your Account Profile."),
         vocabulary="megrok.paypal.charsets",
-        )
+    )
 
     custom = schema.TextLine(
         title=u"Custom",
@@ -120,7 +124,7 @@ class IPayPalStandardBase(Interface):
             u"which buyers do not see."
         ),
         max_length=255,
-        )
+    )
 
     notify_version = schema.Decimal(
         title=u"notify_version",
@@ -145,4 +149,26 @@ class IPayPalStandardBase(Interface):
     residence_country = schema.Choice(
         title=u"Residence country",
         vocabulary="megrok.paypal.countries",
+    )
+
+    test_ipn = schema.Bool(
+        title=u"Test IPN?",
+        default=False,
+    )
+
+    txn_id = schema.TextLine(
+        title=u"Transaction ID",
+        description=u"PayPal transaction ID",
+        max_length=19,
+    )
+
+    txn_type = schema.TextLine(
+        title=u"Transacion Type",
+        description=u"PayPal transaction type.",
+        max_length=128,
+    )
+
+    verify_sign = schema.TextLine(
+        title=u"???",
+        max_length=255,
     )
