@@ -198,10 +198,10 @@ class IPayPalStandardBase(Interface):
         max_length=40,
     )
 
-    address_country_code = schema.TextLine(
+    address_country_code = schema.Choice(
         title=u"Country Code",
         description=u"ISO 3166.1 country code (2-letter)",
-        max_length=64,
+        vocabulary="megrok.paypal.contrycodes",
     )
 
     address_name = schema.TextLine(
