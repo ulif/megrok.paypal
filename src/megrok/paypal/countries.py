@@ -1,3 +1,4 @@
+import iso3166
 from zope.i18nmessageid import MessageFactory
 
 
@@ -201,3 +202,7 @@ COUNTRIES_DICT = {
     'ZA': _('SOUTH AFRICA'),
     'ZM': _('ZAMBIA'),
     }
+
+COUNTRY_CODES_DICT = dict(
+    [(x.alpha2, _(x.name)) for x in iso3166.countries]
+)
