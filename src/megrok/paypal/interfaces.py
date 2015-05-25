@@ -98,7 +98,6 @@ class CountryCodesVocabularyFactory(grok.GlobalUtility):
 
 class IPayPalStandardBase(Interface):
 
-
     #
     # Transaction and notification-related vars.
     #
@@ -261,7 +260,8 @@ class IPayPalStandardBase(Interface):
 
     #
     # Payment info vars
-    # (https://developer.paypal.com/docs/classic/ipn/integration-guide/IPNandPDTVariables/)
+    # (https://developer.paypal.com/docs/classic/ipn/integration-guide/
+    #  IPNandPDTVariables/)
     #
     auth_amount = schema.Decimal(
         title=u"Amount",
@@ -331,4 +331,3 @@ class IPayPalStandardBase(Interface):
             ),
         max_length=127,
         )
-
