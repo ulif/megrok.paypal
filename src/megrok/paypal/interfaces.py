@@ -258,3 +258,77 @@ class IPayPalStandardBase(Interface):
         title=u"Payer ID",
         max_length=13,
     )
+
+    #
+    # Payment info vars
+    # (https://developer.paypal.com/docs/classic/ipn/integration-guide/IPNandPDTVariables/)
+    #
+    auth_amount = schema.Decimal(
+        title=u"Amount",
+        description=u"Authorization amount",
+        default=decimal.Decimal("0.00"),
+        )
+
+    auth_exp = schema.TextLine(
+        title=u"Authorization Expiration Datetime",
+        description=(
+            u"Authorization expiration date and time, in the following "
+            u"format: HH:MM:SS DD Mmm YY, YYYY PST"
+            ),
+        max_length=28,
+        )
+
+    auth_id = schema.TextLine(
+        title=u"Auth ID",
+        description=u"Authorization Identification Number",
+        max_length=19,
+        )
+
+    auth_status = schema.TextLine(
+        title=u"Auth Status",
+        description=u"Status of Authorization",
+        max_length=9,
+        )
+
+    exchange_rate = schema.Decimal(
+        title=u"Exchange Rate",
+        description=(
+            u"Exchange rate used if a currency conversion occurred."
+            ),
+        default=decimal.Decimal("1.00"),
+        )
+
+    invoice = schema.TextLine(
+        title=u"Invoice",
+        description=(
+            u"Pass-through variable you can use to identify your "
+            u"Invoice Number for this purchase. If omitted, no variable "
+            u"is passed back."
+            ),
+        max_length=127,
+        )
+
+    item_name = schema.TextLine(
+        title=u"Item Name",
+        description=(
+            u"Item name as passed by you, the merchant. Or, if not "
+            u"passed by you, as entered by your customer. If this is a "
+            u"shopping cart transaction, PayPal will append the number of "
+            u"the item (e.g., item_name1, item_name2, and so forth)."
+            ),
+        max_length=127,
+        )
+
+    item_number = schema.TextLine(
+        title=u"Item Number",
+        description=(
+            u"Pass-through variable for you to track purchases. It will "
+            u"get passed back to you at the completion of the payment. "
+            u"If omitted, no variable will be passed back to you. If this "
+            u"is a shopping cart transaction, PayPal will append the "
+            u"number of the item (e.g., item_number1, item_number2, and "
+            u"so forth)"
+            ),
+        max_length=127,
+        )
+
