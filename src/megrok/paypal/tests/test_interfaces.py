@@ -8,6 +8,7 @@ from zope.interface.verify import verifyObject, verifyClass
 from megrok.paypal.interfaces import (
     _, PaymentStatesVocabularyFactory, CharsetsVocabularyFactory,
     CountriesVocabularyFactory, CountryCodesVocabularyFactory,
+    AddressStatusVocabularyFactory,
 )
 
 
@@ -19,7 +20,9 @@ class TestInterfacesModule(unittest.TestCase):
                 "megrok.paypal.payment_states",
                 "megrok.paypal.charsets",
                 "megrok.paypal.countries",
-                "megrok.paypal.countrycodes"]:
+                "megrok.paypal.countrycodes",
+                "megrok.paypal.adress_status",
+                ]:
             util = queryUtility(
                 IVocabularyFactory, name=name)
             if util is not None:
@@ -61,6 +64,14 @@ class TestInterfacesModule(unittest.TestCase):
         assert util is not None
         assert isinstance(util, CountryCodesVocabularyFactory)
 
+    def test_address_status_vocab_retrievable(self):
+        # we can get an address status vocab as named utility
+        grok.testing.grok("megrok.paypal.interfaces")
+        util = queryUtility(IVocabularyFactory,
+                            name="megrok.paypal.address_status")
+        assert util is not None
+        assert isinstance(util, AddressStatusVocabularyFactory)
+
     def test_payment_states_vocab_factory_fullfills_iface(self):
         # the payment states vocab factory fullfills interface contracts.
         factory = PaymentStatesVocabularyFactory()
@@ -85,6 +96,12 @@ class TestInterfacesModule(unittest.TestCase):
         verifyClass(IVocabularyFactory, CountryCodesVocabularyFactory)
         verifyObject(IVocabularyFactory, factory)
 
+    def test_address_status_vocab_factory_fullfills_iface(self):
+        # the country codes vocab factory fullfills interface contracts.
+        factory = AddressStatusVocabularyFactory()
+        verifyClass(IVocabularyFactory, AddressStatusVocabularyFactory)
+        verifyObject(IVocabularyFactory, factory)
+
     def test_payment_states_vocab_fullfills_iface(self):
         # the delivered vocabulary fullfills all interface contracts
         factory = PaymentStatesVocabularyFactory()
@@ -106,6 +123,12 @@ class TestInterfacesModule(unittest.TestCase):
     def test_country_codes_vocab_fullfills_iface(self):
         # the delivered vocabulary fullfills all interface contracts
         factory = CountryCodesVocabularyFactory()
+        vocab = factory(context=None)
+        verifyObject(IVocabulary, vocab)
+
+    def test_address_status_vocab_fullfills_iface(self):
+        # the delivered vocabulary fullfills all interface contracts
+        factory = AddressStatusVocabularyFactory()
         vocab = factory(context=None)
         verifyObject(IVocabulary, vocab)
 

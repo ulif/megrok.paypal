@@ -96,6 +96,17 @@ class CountryCodesVocabularyFactory(grok.GlobalUtility):
         return SimpleVocabulary(terms)
 
 
+class AddressStatusVocabularyFactory(grok.GlobalUtility):
+    grok.implements(IVocabularyFactory)
+    grok.name("megrok.paypal.address_status")
+
+    def __call__(self, context):
+        terms = [SimpleTerm(value=x[0], token=x[0], title=x[1])
+                 for x in [('confirmed', _('confirmed')),
+                           ('unconfrimed', _('unconfirmed'))]]
+        return SimpleVocabulary(terms)
+
+
 class IPayPalStandardBase(Interface):
 
     #
