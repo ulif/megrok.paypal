@@ -215,46 +215,61 @@ class IPayPalStandardBase(Interface):
 
     address_status = schema.TextLine(
         title=u"Status",
+        description=(
+            u"Whether the customer provided a confirmed address. It "
+            u"is one of the following values: "
+            u"confirmed - Customer provided a confirmed address. "
+            u"unconfirmed - Customer provided an unconfirmed address."),
         max_length=11,
     )
 
     address_street = schema.TextLine(
         title=u"Street",
+        description=u"Customer's street address.",
         max_length=200,
     )
 
     address_zip = schema.TextLine(
-        title=u"ZIP",
+        title=u"Zip code",
+        description=u"Zip code of customer's address.",
         max_length=20,
     )
 
     contact_phone = schema.TextLine(
         title=u"Phone",
+        description=u"Customer's telephone number.",
         max_length=20,
     )
 
     first_name = schema.TextLine(
         title=u"First Name",
+        description=u"Customer's first name",
         max_length=64,
     )
 
     last_name = schema.TextLine(
         title=u"Last Name",
+        description=u"Customer's last name",
         max_length=64,
     )
 
     payer_business_name = schema.TextLine(
         title=u"Payer Business Name",
+        description=u"Customer's company name, if customer is a business",
         max_length=127,
     )
 
     payer_email = schema.TextLine(
         title=u"Payer Email",
+        description=(
+            u"Customer's primary email address. Use this email "
+            u"to provide any credits."),
         max_length=127,
     )
 
     payer_id = schema.TextLine(
         title=u"Payer ID",
+        description=u"Unique customer ID.",
         max_length=13,
     )
 
