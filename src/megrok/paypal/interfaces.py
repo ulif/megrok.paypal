@@ -200,27 +200,37 @@ class IPayPalStandardBase(Interface):
     #
     address_country = schema.TextLine(
         title=u"Country",
+        description=u"Country of customer's address",
         max_length=64,
     )
 
     address_city = schema.TextLine(
         title=u"City",
+        description=u"City of customer's address",
         max_length=40,
     )
 
     address_country_code = schema.Choice(
         title=u"Country Code",
-        description=u"ISO 3166.1 country code (2-letter)",
+        description=(
+            u"ISO 3166.1 country code (2-letter) associated with "
+            u"customer's address."
+            ),
         vocabulary="megrok.paypal.contrycodes",
     )
 
     address_name = schema.TextLine(
         title=u"Name",
+        description=(
+            u"Name used with address (included when the customer "
+            u"provides a Gift Address)"
+            ),
         max_length=128,
     )
 
     address_state = schema.TextLine(
         title=u"State",
+        description=u"State of customer's address",
         max_length=40,
     )
 
