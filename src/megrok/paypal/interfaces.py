@@ -196,7 +196,7 @@ class IPayPalStandardBase(Interface):
         description=(
             u"ISO 3166 country code associated with the country of residence."
         ),
-        vocabulary="megrok.paypal.countries",
+        vocabulary="megrok.paypal.countrycodes",
     )
 
     test_ipn = schema.Bool(
