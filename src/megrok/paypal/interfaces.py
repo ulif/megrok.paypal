@@ -477,3 +477,59 @@ class IPayPalStandardBase(Interface):
         title=u"Payment Type",
         max_length=7,
         )
+
+    pending_reason = schema.TextLine(
+        title=u"Pending Reason",
+        max_length=14,
+        )
+
+    protection_eligibility = schema.TextLine(
+        title=u"Protection Eligibility",
+        max_length=32,
+        )
+
+    quantity = schema.Int(
+        title=u"Quantity",
+        default=1,
+        )
+
+    reason_code = schema.TextLine(
+        title=u"Reason Code",
+        max_length=15,
+        )
+
+    remaining_settle = schema.Decimal(
+        title=u"Remaining Settle",
+        default=decimal.Decimal("0.00"),
+        )
+
+    settle_amount = schema.Decimal(
+        title=u"Settle Amount",
+        default=decimal.Decimal("0.00"),
+        )
+
+    settle_currency = schema.TextLine(
+        title=u"Settle Currency",
+        max_length=32,
+        )
+
+    shipping = schema.Decimal(
+        title=u"Shipping",
+        default=decimal.Decimal("0.00"),
+        )
+
+    shipping_method = schema.TextLine(
+        title=u"Shipping Method",
+        max_length=255,
+        )
+
+    tax = schema.Decimal(
+        title=u"Tax",
+        default=decimalDecimal("0.00"),
+        )
+
+    transaction_entitiy = schema.TextLine(
+        title=u"Transaction Entity",
+        max_length=7,
+        )
+
