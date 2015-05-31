@@ -383,7 +383,7 @@ class IPayPalStandardBase(Interface):
         max_length=127,
         )
 
-    item_name = schema.TextLine(
+    item_nameX = schema.TextLine(
         title=u"Item Name",
         description=(
             u"Item name as passed by you, the merchant. Or, if not "
@@ -394,7 +394,7 @@ class IPayPalStandardBase(Interface):
         max_length=127,
         )
 
-    item_number = schema.TextLine(
+    item_numberX = schema.TextLine(
         title=u"Item Number",
         description=(
             u"Pass-through variable for you to track purchases. It will "
@@ -405,4 +405,75 @@ class IPayPalStandardBase(Interface):
             u"so forth)"
             ),
         max_length=127,
+        )
+
+    mc_currency = schema.TextLine(
+        title=u"Payment Currency",
+        default=u"USD",
+        max_length=32,
+        )
+
+    mc_fee = schema.Decimal(
+        title=u"Transaction Fee",
+        default=decimal.Decimal("0.00"),
+        )
+
+    mc_gross = schema.Decimal(
+        title=u"Payment Gross",
+        default=decimal.Decimal("0.00"),
+        )
+
+    mc_handling = schema.Decimal(
+        title=u"Handling fees",
+        default=decimal.Decimal("0.00"),
+        )
+
+    mc_shipping = schema.Decimal(
+        title=u"Shipping costs",
+        default=decimal.Decimal("0.00"),
+        )
+
+    memo = schema.TextLine(
+        title=u"Memo",
+        max_length=255,
+        )
+
+    num_cart_items = schema.Int(
+        title=u"Number of cart items",
+        default=0,
+        )
+
+    option_name1 = schema.TextLine(
+        title=u"Option name 1",
+        max_length=64,
+        )
+
+    option_name2 = schema.TextLine(
+        title=u"Option name 2",
+        max_length=64,
+        )
+
+    payer_status = schema.TextLine(
+        title=u"Payer Status",
+        max_length=10,
+        )
+
+    payment_date = schema.Datetime(
+        title=u"Payment Date",
+        description=u"Format: HH:MM:SS DD Mmm YY, YYYY PST",
+        )
+
+    payment_gross = schema.Decimal(
+        title=u"Payment Gross",
+        default=decimalDecimal("0.00"),
+        )
+
+    payment_status = schema.TextLine(
+        title=u"Payment Status",
+        max_length=17,
+        )
+
+    payment_type = schema.TextLine(
+        title=u"Payment Type",
+        max_length=7,
         )
