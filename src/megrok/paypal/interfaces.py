@@ -465,7 +465,7 @@ class IPayPalStandardBase(Interface):
 
     payment_gross = schema.Decimal(
         title=u"Payment Gross",
-        default=decimalDecimal("0.00"),
+        default=decimal.Decimal("0.00"),
         )
 
     payment_status = schema.TextLine(
@@ -525,11 +525,10 @@ class IPayPalStandardBase(Interface):
 
     tax = schema.Decimal(
         title=u"Tax",
-        default=decimalDecimal("0.00"),
+        default=decimal.Decimal("0.00"),
         )
 
     transaction_entitiy = schema.TextLine(
         title=u"Transaction Entity",
         max_length=7,
         )
-
