@@ -409,32 +409,61 @@ class IPayPalStandardBase(Interface):
 
     mc_currency = schema.TextLine(
         title=u"Payment Currency",
+        description=(
+            u"For payment IPN notifications, this is the currency of the "
+            u"payment. For non-payment subscription IPN notifications "
+            u"(i.e., txn_type= signup, cancel, failed, eot, or modify), "
+            u"this is the currency of the subscription. For payment "
+            u"subscription IPN notifications, it is the currency of the "
+            u"payment (i.e., txn_type = subscr_payment)"
+            ),
         default=u"USD",
         max_length=32,
         )
 
     mc_fee = schema.Decimal(
         title=u"Transaction Fee",
+        description=(
+            u"Transaction fee associated with the payment. mc_gross minus "
+            u"mc_fee equals the amount deposited into the receiver_email "
+            u"account. Equivalent to payment_fee for USD payments. If this "
+            u"amount is negative, it signifies a refund or reversal, and "
+            u"either of those payment statuses can be for the full or partial "
+            u"amount of the original transaction fee."
+            ),
         default=decimal.Decimal("0.00"),
         )
 
     mc_gross = schema.Decimal(
         title=u"Payment Gross",
+        description=(
+            u"Full amount of the customer's payment, before transaction "
+            u"fee is subtracted. Equivalent to payment_gross for USD "
+            u"payments. If this amount is negative, it signifies a refund "
+            u"or reversal, and either of those payment statuses can be for "
+            u"the full or partial amount of the original transaction."
+            ),
         default=decimal.Decimal("0.00"),
         )
 
     mc_handling = schema.Decimal(
         title=u"Handling fees",
+        description=u"Total handling amount associated with the transaction.",
         default=decimal.Decimal("0.00"),
         )
 
     mc_shipping = schema.Decimal(
         title=u"Shipping costs",
+        description=u"Total shipping amount associated with the transaction.",
         default=decimal.Decimal("0.00"),
         )
 
     memo = schema.TextLine(
         title=u"Memo",
+        description=(
+            u"Memo as entered by your customer in PayPal Website Payments "
+            u"note field."
+            ),
         max_length=255,
         )
 
@@ -528,7 +557,7 @@ class IPayPalStandardBase(Interface):
         default=decimal.Decimal("0.00"),
         )
 
-    transaction_entitiy = schema.TextLine(
+    transaction_entity = schema.TextLine(
         title=u"Transaction Entity",
         max_length=7,
         )
