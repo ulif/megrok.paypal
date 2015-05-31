@@ -122,8 +122,12 @@ class IPayPalStandardBase(Interface):
     business = schema.TextLine(
         title=u"Merchant email or id",
         description=(
-            u"Your PayPal ID or an email address associated "
-            u"with your PayPal account. Email addresses must be confirmed."),
+            u"Email address or account ID of the payment recipient (that is, "
+            u"the merchant). Equivalent to the values of receiver_email "
+            u"(if payment is sent to primary account) and business set in "
+            u"the Website Payment HTML. Value of this variable is normalized "
+            u"to lowercase characters"
+        ),
         max_length=127,
         )
 
@@ -142,57 +146,92 @@ class IPayPalStandardBase(Interface):
     custom = schema.TextLine(
         title=u"Custom",
         description=(
-            u"Pass-through variable for your own tracking purposes, "
-            u"which buyers do not see."
+            "Custom value as passed by you, the merchant. These are "
+            u"pass-through variables that are never presented to your "
+            u"customer"
         ),
         max_length=255,
     )
 
     notify_version = schema.Decimal(
         title=u"notify_version",
+        description=u"Message's version number",
         default=decimal.Decimal("0.00"),
     )
 
-    parent_txn_id = schema.Int(
+    parent_txn_id = schema.TextLine(
         title=u"Parent transaction ID",
-        default=0,
+        description=(
+            u"In the case of a refund, reversal, or canceled reversal, "
+            u"this variable contains the txn_id of the original "
+            u"transaction, while txn_id contains a new ID for the new "
+            u"transaction."
+        ),
+        max_length=19,
     )
 
     receiver_email = schema.TextLine(
-        title=u"???",
+        title=u"Receiver Email",
+        description=(
+            u"Primary email address of the payment recipient (that is, "
+            u"the merchant). If the payment is sent to a non-primary "
+            u"email address on your PayPal account, the receiver_email is "
+            u"still your primary email. Value of this variable is normalized "
+            u"to lowercase characters."
+        ),
         max_length=127,
     )
 
     receiver_id = schema.TextLine(
-        title=u"???",
-        max_length=127,
+        title=u"Receiver ID",
+        description=(
+            u"Unique account ID of the payment recipient (i.e., the "
+            u"merchant). This is the same as the recipient's referral ID."
+        ),
+        max_length=13,
     )
 
     residence_country = schema.Choice(
-        title=u"Residence country",
+        title=u"(Merchant's) residence country",
+        description=(
+            u"ISO 3166 country code associated with the country of residence."
+        ),
         vocabulary="megrok.paypal.countries",
     )
 
     test_ipn = schema.Bool(
-        title=u"Test IPN?",
+        title=u"Is message IPN test?",
+        description=(
+            u"Whether the message is a test message. It is one of the "
+            u"following values: 1 - the message is directed to the Sandbox"
+        ),
         default=False,
     )
 
     txn_id = schema.TextLine(
         title=u"Transaction ID",
-        description=u"PayPal transaction ID",
+        description=(
+            u"The merchant's original transaction identification "
+            u"number for the payment from the buyer, against which the "
+            u"case was registered."
+        ),
         max_length=19,
     )
 
     txn_type = schema.TextLine(
         title=u"Transacion Type",
-        description=u"PayPal transaction type.",
+        description=(
+            u"The kind of transaction for which the IPN message was sent."
+        ),
         max_length=128,
     )
 
     verify_sign = schema.TextLine(
-        title=u"???",
-        max_length=255,
+        title=u"Verify sign",
+        description=(
+            u"Encrypted string used to validate the authenticity of the "
+            u"transaction"
+        ),
     )
 
     #
