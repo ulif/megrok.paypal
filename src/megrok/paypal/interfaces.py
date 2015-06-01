@@ -107,7 +107,9 @@ class AddressStatusVocabularyFactory(grok.GlobalUtility):
         return SimpleVocabulary(terms)
 
 
-class IPayPalPayment(Interface):
+class IPayPalPaymentForm(Interface):
+    """Most basic form fields for PayPal payments.
+    """
 
     business = schema.TextLine(
         title=u"Merchant email or id",

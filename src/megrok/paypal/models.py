@@ -1,7 +1,7 @@
 import grok
-from megrok.paypal.interfaces import IPayPalPayment
+from megrok.paypal.interfaces import IPayPalPaymentForm
 
 
 class PayPalForm(grok.Model):
 
-    grok.implements(IPayPalPayment)
+    grok.implements(IPayPalPaymentForm)
