@@ -785,3 +785,51 @@ class IPayPalStandardBase(Interface):
         description=u"Authorization and Capture transaction entity",
         max_length=7,
         )
+
+
+class IPayPalPayment(Interface):
+
+    business = schema.TextLine(
+        title=u"Merchant email or id",
+        description=(
+            u"Email address or account ID of the payment recipient (that is, "
+            u"the merchant). Equivalent to the values of receiver_email "
+            u"(if payment is sent to primary account) and business set in "
+            u"the Website Payment HTML. Value of this variable is normalized "
+            u"to lowercase characters"
+        ),
+        max_length=127,
+        required=True,
+        )
+
+    amount = schema.Decimal(
+        title=u"Amount",
+        default=decimal.Decimal("0.00"),
+        required=True,
+        )
+
+    notify_url = schema.URI(
+        title=u"URL where PayPal should deliver notifications.",
+        required=True,
+        )
+
+    return_url = schema.URI(
+        title=u"Where users are sent after successfull payment.",
+        required=True,
+        )
+
+    cancel_return = schema.URI(
+        title=u"Where users are sent after payment cancellation.",
+        required=True,
+        )
+
+    item_name = schema.TextLine(
+        title=u"Item Name",
+        required=False,
+        )
+
+    invoice = schema.TextLine(
+        title=u"Unique Invoice ID",
+        required=False,
+        )
+
