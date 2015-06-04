@@ -19,8 +19,9 @@ class PayPalForm(object):
     def cancel_return(self):
         return None
 
-    def __init__(self, business=None, item_name=None,
-                  amount=decimal.Decimal("0.00"), invoice=None):
+    def __init__(
+            self, business=None, item_name=None,
+            amount=decimal.Decimal("0.00"), invoice=None):
         self.invoice = invoice
         self.business = business
         self.item_name = item_name
