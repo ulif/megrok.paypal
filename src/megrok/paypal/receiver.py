@@ -13,7 +13,7 @@ import grok
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 
 
-class PayPalIPNReceiver(grok.Application, grok.Container):
+class PayPalIPNReceiver(grok.Container):
     """A receiver for IPN messages sent from paypal.
     """
     grok.implements(IPayPalIPNReceiver)
