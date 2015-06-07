@@ -834,3 +834,9 @@ class IPayPalStandardBase(Interface):
         description=u"Authorization and Capture transaction entity",
         max_length=7,
         )
+
+
+class IPayPalIPNReceiver(Interface):
+    """Temporarily a marker interface.
+    """
+    pass
