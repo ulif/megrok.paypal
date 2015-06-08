@@ -26,6 +26,8 @@ install_requires = [
 
 tests_require = [
     # Please do not forget to mention test dependencies also in tox.ini.
+    'zope.app.wsgi',
+    'zope.testbrowser[wsgi]',
     ]
 
 
