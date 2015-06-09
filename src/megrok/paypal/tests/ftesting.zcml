@@ -30,7 +30,7 @@
   <role id="grok.BoneOwner" title="Bone Owner" />
   <grant role="grok.BoneOwner" permission="bone.gold" />
 
-  <!-- grok:grok package="grokcore.view.ftests" / -->
+  <grok:grok package="megrok.paypal" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"
