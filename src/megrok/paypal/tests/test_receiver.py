@@ -2,8 +2,9 @@
 import grok
 import unittest
 import megrok.paypal.tests
-from zope.app.wsgi.testlayer import BrowserLayer, Browser
+from zope.app.wsgi.testlayer import BrowserLayer
 from zope.interface.verify import verifyClass, verifyObject
+from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 from megrok.paypal.receiver import PayPalIPNReceiver
 
