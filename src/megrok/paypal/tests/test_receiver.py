@@ -35,6 +35,17 @@ class SampleAppView(grok.View):
         form_data = "VARS: %s" % sorted(self.request.form.items())
         return u"Hi from SampleAppView, %s" % form_data
 
+class SampleAppView2(grok.View):
+    # another view for sample context
+    grok.context(SampleApp)
+    grok.name('bar')
+
+    def render(self):
+        self.request["wsgi.input"].seek(0)
+        body_data = self.request["wsgi.input"].read()
+        return u"INPUT: %s" % body_data
+
+
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
@@ -65,3 +76,14 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         assert browser.contents == (
             "Hi from SampleAppView, VARS: [(u'x', u'1'), (u'y', u'2')]"
             )
+
+    def test_can_access_post_data_line(self):
+        # TEMPORARY test. We can access the body line with the post data.
+        app = SampleApp()
+        self.layer.getRootFolder()['app'] = app
+        browser = Browser()
+        browser.handleErrors = False
+        browser.post("http://localhost/app/@@bar", "x=1&y=2")
+        assert browser.contents == ("INPUT: x=1&y=2")
+        browser.post("http://localhost/app/@@bar", "y=1&x=2")
+        assert browser.contents == ("INPUT: y=1&x=2")
