@@ -25,6 +25,7 @@
   <include package="zope.app.appsetup" />
   <include package="zope.app.publication" />
   <include package="zope.container" />
+  <include package="zope.publisher" />
 
   <permission id="bone.gold" title="Gold Bone" />
   <role id="grok.BoneOwner" title="Bone Owner" />
