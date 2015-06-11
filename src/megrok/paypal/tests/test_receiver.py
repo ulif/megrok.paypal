@@ -32,7 +32,8 @@ class SampleAppView(grok.View):
     grok.name('foo')
 
     def render(self, *args, **kw):
-        return u"Hi from SampleAppView"
+        form_data = "VARS: %s" % sorted(self.request.form.items())
+        return u"Hi from SampleAppView, %s" % form_data
 
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
@@ -53,4 +54,14 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         self.layer.getRootFolder()['app'] = app
         browser = Browser()
         browser.open("http://localhost/app/@@foo")
-        assert browser.contents == 'Hi from SampleAppView'
+        assert browser.contents == 'Hi from SampleAppView, VARS: []'
+
+    def test_post_data(self):
+        # TEMPORARY test. Make sure we can post data.
+        app = SampleApp()
+        self.layer.getRootFolder()['app'] = app
+        browser = Browser()
+        browser.post("http://localhost/app/@@foo", "x=1&y=2")
+        assert browser.contents == (
+            "Hi from SampleAppView, VARS: [(u'x', u'1'), (u'y', u'2')]"
+            )
