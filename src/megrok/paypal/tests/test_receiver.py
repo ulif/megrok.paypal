@@ -35,6 +35,7 @@ class SampleAppView(grok.View):
         form_data = "VARS: %s" % sorted(self.request.form.items())
         return u"Hi from SampleAppView, %s" % form_data
 
+
 class SampleAppView2(grok.View):
     # another view for sample context
     grok.context(SampleApp)
@@ -44,7 +45,6 @@ class SampleAppView2(grok.View):
         self.request["wsgi.input"].seek(0)
         body_data = self.request["wsgi.input"].read()
         return u"INPUT: %s" % body_data
-
 
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
