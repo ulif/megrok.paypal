@@ -839,4 +839,9 @@ class IPayPalStandardBase(Interface):
 class IPayPalIPNReceiver(Interface):
     """Temporarily a marker interface.
     """
-    pass
+    response_uri = schema.URI(
+        title=u"",
+        description=u"",
+        default="https://www.sandbox.paypal.com/cgi-bin/webscr/",
+        required=True,
+    )
