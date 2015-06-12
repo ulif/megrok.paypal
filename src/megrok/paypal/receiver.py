@@ -17,3 +17,5 @@ class PayPalIPNReceiver(grok.Container):
     """A receiver for IPN messages sent from paypal.
     """
     grok.implements(IPayPalIPNReceiver)
+
+    response_uri = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
