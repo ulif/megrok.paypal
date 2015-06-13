@@ -44,7 +44,8 @@ class SampleAppView2(grok.View):
     def render(self):
         self.request["wsgi.input"].seek(0)
         body_data = self.request["wsgi.input"].read()
-        return u"INPUT: %s" % body_data
+        content_type = self.request.headers.get("Content-Type")
+        return u"INPUT: %s CONTENT-TYPE %s" % (body_data, content_type)
 
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
@@ -84,6 +85,25 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.handleErrors = False
         browser.post("http://localhost/app/@@bar", "x=1&y=2")
-        assert browser.contents == ("INPUT: x=1&y=2")
+        assert browser.contents == (
+            "INPUT: x=1&y=2 "
+            "CONTENT-TYPE application/x-www-form-urlencoded"
+        )
         browser.post("http://localhost/app/@@bar", "y=1&x=2")
-        assert browser.contents == ("INPUT: y=1&x=2")
+        assert browser.contents == (
+            "INPUT: y=1&x=2 "
+            "CONTENT-TYPE application/x-www-form-urlencoded"
+        )
+
+    def test_can_set_content_type(self):
+        # TEMPORARY test. We can set the content type of a post request.
+        app = SampleApp()
+        self.layer.getRootFolder()['app'] = app
+        browser = Browser()
+        browser.handleErrors = False
+        browser.post("http://localhost/app/@@bar", "x=1&y=2",
+                     "application/x-javascript")
+        assert browser.contents == (
+            "INPUT: x=1&y=2 "
+            "CONTENT-TYPE application/x-javascript"
+            )
