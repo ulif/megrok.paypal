@@ -116,3 +116,12 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         request = TestRequest()
         view = getMultiAdapter((receiver, request), name='notify')
         assert view is not None
+
+    def test_notify_returns_200_Ok(self):
+        # if we deliver normal data we will get a 200 Ok.
+        receiver = PayPalIPNReceiver()
+        receiver.response_uri = ''
+        self.layer.getRootFolder()['app'] = receiver
+        browser = Browser()
+        browser.open('http://localhost/app/@@notify')
+        assert browser.headers.get("status") == "200 Ok"
