@@ -3,7 +3,9 @@ import grok
 import unittest
 import megrok.paypal.tests
 from zope.app.wsgi.testlayer import BrowserLayer
+from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass, verifyObject
+from zope.publisher.browser import TestRequest
 from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 from megrok.paypal.receiver import PayPalIPNReceiver
@@ -19,6 +21,13 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         receiver = PayPalIPNReceiver()
         verifyClass(IPayPalIPNReceiver, PayPalIPNReceiver)
         verifyObject(IPayPalIPNReceiver, receiver)
+
+    def test_has_notify_view(self):
+        # we have a 'notify' view for PayPalIPNReceivers
+        receiver = PayPalIPNReceiver()
+        request = TestRequest()
+        view = getMultiAdapter((receiver, request), name='notify')
+        assert view is not None
 
 
 class SampleApp(grok.Context):
