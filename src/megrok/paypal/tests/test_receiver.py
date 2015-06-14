@@ -22,13 +22,6 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         verifyClass(IPayPalIPNReceiver, PayPalIPNReceiver)
         verifyObject(IPayPalIPNReceiver, receiver)
 
-    def test_has_notify_view(self):
-        # we have a 'notify' view for PayPalIPNReceivers
-        receiver = PayPalIPNReceiver()
-        request = TestRequest()
-        view = getMultiAdapter((receiver, request), name='notify')
-        assert view is not None
-
 
 class SampleApp(grok.Context):
     # a sample context
@@ -116,3 +109,10 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
             "INPUT: x=1&y=2 "
             "CONTENT-TYPE application/x-javascript"
             )
+
+    def test_has_notify_view(self):
+        # we have a 'notify' view for PayPalIPNReceivers
+        receiver = PayPalIPNReceiver()
+        request = TestRequest()
+        view = getMultiAdapter((receiver, request), name='notify')
+        assert view is not None
