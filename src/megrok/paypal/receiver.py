@@ -2,11 +2,13 @@
 
 IPN infos:
 
-  https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNIntro/
+  https://developer.paypal.com/webapps/developer/docs/
+          classic/ipn/integration-guide/IPNIntro/
 
 IPN simulator:
 
-  https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNSimulator/
+  https://developer.paypal.com/webapps/developer/docs/
+          classic/ipn/integration-guide/IPNSimulator/
 
 """
 import grok
