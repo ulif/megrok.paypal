@@ -845,3 +845,8 @@ class IPayPalIPNReceiver(Interface):
         default="https://www.sandbox.paypal.com/cgi-bin/webscr/",
         required=True,
     )
+
+    def got_notification(post_var_string):
+        """The receiver got an instant payment notification (IPN).
+        """
+        pass
