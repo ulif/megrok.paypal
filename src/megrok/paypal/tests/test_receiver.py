@@ -125,3 +125,12 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.open('http://localhost/app/@@notify')
         assert browser.headers.get("status") == "200 Ok"
+
+    def test_notify_returns_empty_body(self):
+        # if we deliver normal data we will return with an empty doc.
+        receiver = PayPalIPNReceiver()
+        receiver.response_uri = ''
+        self.layer.getRootFolder()['app'] = receiver
+        browser = Browser()
+        browser.open('http://localhost/app/@@notify')
+        assert browser.contents == ''
