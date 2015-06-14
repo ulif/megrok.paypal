@@ -28,3 +28,13 @@ class PayPalIPNReceiver(grok.Container):
         The `post_var_string` is the data payload sent by the notification.
         """
         pass
+
+
+class NotifyView(grok.View):
+    """A view we can offer paypal for instant payment notifications.
+    """
+    grok.context(IPayPalIPNReceiver)
+    grok.name('notify')
+
+    def render(self):
+        return ''
