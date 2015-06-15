@@ -133,3 +133,23 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.open('http://localhost/app/@@notify')
         assert browser.contents == ''
+
+    def test_notify_calls_got_notification(self):
+        # the notify view informs the receiver.
+        receiver = ModifiedReceiver()
+        receiver.response_uri = ''
+        self.layer.getRootFolder()['app'] = receiver
+        browser = Browser()
+        browser.handleErrors = False
+        browser.addHeader('Authorization', 'Basic mgr:mgrpw')
+        browser.post("http://localhost/app/@@notify", "y=1&x=2")
+        assert receiver.call_args == 'y=1&x=2'
+
+
+class ModifiedReceiver(PayPalIPNReceiver):
+    # An IPN receiver that stores last sent notification string
+
+    call_args = None
+
+    def got_notification(self, post_var_string):
+        self.call_args = post_var_string
