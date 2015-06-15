@@ -20,6 +20,7 @@ class PayPalIPNReceiver(grok.Container):
     """
     grok.implements(IPayPalIPNReceiver)
 
+
     response_uri = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
 
     def got_notification(self, post_var_string):
@@ -35,6 +36,12 @@ class NotifyView(grok.View):
     """
     grok.context(IPayPalIPNReceiver)
     grok.name('notify')
+
+    def update(self):
+        body_data = self.request.bodyStream.getCacheStream().read()
+        content_type = self.request.headers.get("Content-Type")
+        # XXX: this does not work yet
+        #  self.context.got_notification(body_data)
 
     def render(self):
         return ''
