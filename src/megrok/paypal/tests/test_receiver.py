@@ -44,8 +44,7 @@ class SampleAppView2(grok.View):
     grok.name('bar')
 
     def render(self):
-        self.request["wsgi.input"].seek(0)
-        body_data = self.request["wsgi.input"].read()
+        body_data = self.request.bodyStream.getCacheStream().read()
         content_type = self.request.headers.get("Content-Type")
         return u"INPUT: %s CONTENT-TYPE %s" % (body_data, content_type)
 
