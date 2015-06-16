@@ -29,6 +29,11 @@ class PayPalIPNReceiver(grok.Container):
         """
         pass
 
+    def send_validate(self, post_var_string):
+        """Request validation from PayPal.
+        """
+        pass
+
 
 class NotifyView(grok.View):
     """A view we can offer paypal for instant payment notifications.

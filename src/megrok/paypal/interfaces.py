@@ -840,8 +840,8 @@ class IPayPalIPNReceiver(Interface):
     """Temporarily a marker interface.
     """
     response_uri = schema.URI(
-        title=u"",
-        description=u"",
+        title=u"URI to contact for validation",
+        description=u"This URI is used to validate IPNs we get.",
         default="https://www.sandbox.paypal.com/cgi-bin/webscr/",
         required=True,
     )
@@ -850,3 +850,12 @@ class IPayPalIPNReceiver(Interface):
         """The receiver got an instant payment notification (IPN).
         """
         pass
+
+    def send_validate(post_var_string):
+        """Send validation request to PayPal.
+
+        In fact we send the data in `post_var_string` to `response_uri`
+        and return the result (if any).
+
+        If `response_uri` is not set or empty, no action is performed.
+        """
