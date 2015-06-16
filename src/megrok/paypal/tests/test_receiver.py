@@ -152,8 +152,8 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         # we do not give a view name here.
-        browser.post("http://localhost/app", "y=1&x=2")
-        assert receiver.call_args == 'y=1&x=2'
+        browser.post("http://localhost/app", "got_it=1")
+        assert receiver.call_args == 'got_it=1'
 
 
 class ModifiedReceiver(PayPalIPNReceiver):
