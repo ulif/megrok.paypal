@@ -143,6 +143,16 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser.post("http://localhost/app/@@index", "y=1&x=2")
         assert receiver.call_args == 'y=1&x=2'
 
+    def test_index_is_default_view(self):
+        # the index view is called by default.
+        receiver = ModifiedReceiver()
+        receiver.response_uri = ''
+        self.layer.getRootFolder()['app'] = receiver
+        browser = Browser()
+        # we do not give a view name here.
+        browser.post("http://localhost/app", "y=1&x=2")
+        assert receiver.call_args == 'y=1&x=2'
+
 
 class ModifiedReceiver(PayPalIPNReceiver):
     # An IPN receiver that stores last sent notification string
