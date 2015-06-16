@@ -109,14 +109,14 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
             "CONTENT-TYPE application/x-javascript"
             )
 
-    def test_has_notify_view(self):
-        # we have a 'notify' view for PayPalIPNReceivers
+    def test_has_index_view(self):
+        # we have an 'index' view for PayPalIPNReceivers
         receiver = PayPalIPNReceiver()
         request = TestRequest()
         view = getMultiAdapter((receiver, request), name='index')
         assert view is not None
 
-    def test_notify_returns_200_Ok(self):
+    def test_index_returns_200_Ok(self):
         # if we deliver normal data we will get a 200 Ok.
         receiver = PayPalIPNReceiver()
         receiver.response_uri = ''
@@ -125,7 +125,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser.open('http://localhost/app/@@index')
         assert browser.headers.get("status") == "200 Ok"
 
-    def test_notify_returns_empty_body(self):
+    def test_index_returns_empty_body(self):
         # if we deliver normal data we will return with an empty doc.
         receiver = PayPalIPNReceiver()
         receiver.response_uri = ''
@@ -134,8 +134,8 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser.open('http://localhost/app/@@index')
         assert browser.contents == ''
 
-    def test_notify_calls_got_notification(self):
-        # the notify view informs the receiver.
+    def test_index_calls_got_notification(self):
+        # the index view informs the receiver.
         receiver = ModifiedReceiver()
         receiver.response_uri = ''
         self.layer.getRootFolder()['app'] = receiver
