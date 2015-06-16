@@ -142,6 +142,8 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.post("http://localhost/app/@@index", "y=1&x=2")
         assert receiver.call_args == 'y=1&x=2'
+        browser.post("http://localhost/app/@@index", "x=1&y=2")
+        assert receiver.call_args == 'x=1&y=2'
 
     def test_index_is_default_view(self):
         # the index view is called by default.
