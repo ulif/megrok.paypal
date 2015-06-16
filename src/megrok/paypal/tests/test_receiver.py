@@ -119,7 +119,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_returns_200_Ok(self):
         # if we deliver normal data we will get a 200 Ok.
         receiver = PayPalIPNReceiver()
-        receiver.response_uri = ''
+        receiver.validation_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.open('http://localhost/app/@@index')
@@ -128,7 +128,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_returns_empty_body(self):
         # if we deliver normal data we will return with an empty doc.
         receiver = PayPalIPNReceiver()
-        receiver.response_uri = ''
+        receiver.validation_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.open('http://localhost/app/@@index')
@@ -137,7 +137,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_calls_got_notification(self):
         # the index view informs the receiver.
         receiver = ModifiedReceiver()
-        receiver.response_uri = ''
+        receiver.validation_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.post("http://localhost/app/@@index", "y=1&x=2")
@@ -148,7 +148,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_is_default_view(self):
         # the index view is called by default.
         receiver = ModifiedReceiver()
-        receiver.response_uri = ''
+        receiver.validation_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         # we do not give a view name here.

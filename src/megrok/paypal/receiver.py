@@ -20,7 +20,7 @@ class PayPalIPNReceiver(grok.Container):
     """
     grok.implements(IPayPalIPNReceiver)
 
-    response_uri = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
+    validation_uri = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
 
     def got_notification(self, post_var_string):
         """The receiver got an instant payment notification (IPN).
