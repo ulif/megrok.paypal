@@ -13,6 +13,7 @@
   <include package="zope.app.publication" file="meta.zcml" />
   <include package="grokcore.view" file="meta.zcml" />
 
+  <include package="grok" />
   <include package="zope.security" />
   <include package="zope.securitypolicy" />
   <include package="zope.principalregistry" />
@@ -46,6 +47,7 @@
       id="zope.anybody"
       title="Unauthenticated User"
       />
+
   <grant
       permission="zope.View"
       principal="zope.anybody"
