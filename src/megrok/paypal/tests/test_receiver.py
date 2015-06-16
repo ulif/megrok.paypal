@@ -140,8 +140,6 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         receiver.response_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
-        browser.handleErrors = False
-        browser.addHeader('Authorization', 'Basic mgr:mgrpw')
         browser.post("http://localhost/app/@@index", "y=1&x=2")
         assert receiver.call_args == 'y=1&x=2'
 
