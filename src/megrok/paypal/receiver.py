@@ -40,8 +40,7 @@ class NotifyView(grok.View):
     def update(self):
         body_data = self.request.bodyStream.getCacheStream().read()
         content_type = self.request.headers.get("Content-Type")
-        # XXX: this does not work yet
-        #  self.context.got_notification(body_data)
+        self.context.got_notification(body_data)
 
     def render(self):
         return ''
