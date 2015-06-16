@@ -163,3 +163,11 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         # we do not give a view name here.
         browser.post("http://localhost/app", "got_it=1")
         assert receiver.call_args == 'got_it=1'
+
+    def test_send_validate_no_action_wo_validation_uri(self):
+        #  a receiver does not perform any action w/o a validation_uri set.
+        receiver = PayPalIPNReceiver()
+        receiver.validation_uri = ''
+        assert receiver.send_validate('x=1') is None
+        receiver.validation_uri = None
+        assert receiver.send_validate('x=1') is None
