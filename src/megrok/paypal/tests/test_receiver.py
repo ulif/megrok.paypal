@@ -49,6 +49,15 @@ class SampleAppView2(grok.View):
         return u"INPUT: %s CONTENT-TYPE %s" % (body_data, content_type)
 
 
+class ModifiedReceiver(PayPalIPNReceiver):
+    # An IPN receiver that stores last sent notification string
+
+    call_args = None
+
+    def got_notification(self, post_var_string):
+        self.call_args = post_var_string
+
+
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
     layer = FunctionalLayer
@@ -154,12 +163,3 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         # we do not give a view name here.
         browser.post("http://localhost/app", "got_it=1")
         assert receiver.call_args == 'got_it=1'
-
-
-class ModifiedReceiver(PayPalIPNReceiver):
-    # An IPN receiver that stores last sent notification string
-
-    call_args = None
-
-    def got_notification(self, post_var_string):
-        self.call_args = post_var_string
