@@ -35,7 +35,7 @@ class NotifyView(grok.View):
     """A view we can offer paypal for instant payment notifications.
     """
     grok.context(IPayPalIPNReceiver)
-    grok.name('notify')
+    grok.name('index')
 
     def update(self):
         body_data = self.request.bodyStream.getCacheStream().read()

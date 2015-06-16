@@ -113,7 +113,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         # we have a 'notify' view for PayPalIPNReceivers
         receiver = PayPalIPNReceiver()
         request = TestRequest()
-        view = getMultiAdapter((receiver, request), name='notify')
+        view = getMultiAdapter((receiver, request), name='index')
         assert view is not None
 
     def test_notify_returns_200_Ok(self):
@@ -122,7 +122,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         receiver.response_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
-        browser.open('http://localhost/app/@@notify')
+        browser.open('http://localhost/app/@@index')
         assert browser.headers.get("status") == "200 Ok"
 
     def test_notify_returns_empty_body(self):
@@ -131,7 +131,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         receiver.response_uri = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
-        browser.open('http://localhost/app/@@notify')
+        browser.open('http://localhost/app/@@index')
         assert browser.contents == ''
 
     def test_notify_calls_got_notification(self):
@@ -142,7 +142,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.handleErrors = False
         browser.addHeader('Authorization', 'Basic mgr:mgrpw')
-        browser.post("http://localhost/app/@@notify", "y=1&x=2")
+        browser.post("http://localhost/app/@@index", "y=1&x=2")
         assert receiver.call_args == 'y=1&x=2'
 
 
