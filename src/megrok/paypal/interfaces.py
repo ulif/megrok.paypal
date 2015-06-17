@@ -849,7 +849,6 @@ class IPayPalIPNReceiver(Interface):
     def got_notification(post_var_string):
         """The receiver got an instant payment notification (IPN).
         """
-        pass
 
     def send_validate(post_var_string):
         """Send validation request to PayPal.
