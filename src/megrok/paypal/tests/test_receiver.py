@@ -58,6 +58,34 @@ class ModifiedReceiver(PayPalIPNReceiver):
         self.call_args = post_var_string
 
 
+class FakePayPal(grok.Context):
+    # a fake paypal to send ipns to.
+
+    def __init__(self, mode='success'):
+        # mode can be 'success',  'fail', or 'mirror'. 'mirror' means:
+        # send back a body with received headers and body
+        # data. 'success' and 'fail' should trigger to mimic positive
+        # or negative validations.
+        self.mode = mode
+
+
+class FakePayPalView(grok.View):
+    grok.name('index')
+    grok.context(FakePayPal)
+
+    def mirror(self):
+        body_data = self.request.bodyStream.getCacheStream().read()
+        content_type = self.request.headers.get("Content-Type")
+        return 'BODY: %s\nCONTENT_TYPE: %s' % (body_data, content_type)
+
+    def render(self):
+        if self.context.mode == 'success':
+            return 'VERIFIED'
+        elif self.context.mode == 'mirror':
+            return self.mirror()
+        return 'INVALID'
+
+
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
     layer = FunctionalLayer
@@ -171,3 +199,33 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         assert receiver.send_validate('x=1') is None
         receiver.validation_uri = None
         assert receiver.send_validate('x=1') is None
+
+    def test_fake_paypal_success(self):
+        # we can use FakePayPal for testing successful validations
+        fake_paypal = FakePayPal(mode='success')
+        root = self.layer.getRootFolder()
+        root['fake_paypal'] = fake_paypal
+        browser = Browser()
+        browser.post('http://localhost/fake_paypal/@@index', 'x=2')
+        assert browser.contents == 'VERIFIED'
+
+    def test_fake_paypal_fail(self):
+        # we can use FakePayPal for testing failed validations
+        fake_paypal = FakePayPal(mode='fail')
+        root = self.layer.getRootFolder()
+        root['fake_paypal'] = fake_paypal
+        browser = Browser()
+        browser.post('http://localhost/fake_paypal/@@index', 'x=3')
+        assert browser.contents == 'INVALID'
+
+    def test_fake_paypal_fail(self):
+        # we can use FakePayPal for mirroring our posts
+        fake_paypal = FakePayPal(mode='mirror')
+        root = self.layer.getRootFolder()
+        root['fake_paypal'] = fake_paypal
+        browser = Browser()
+        browser.post('http://localhost/fake_paypal/@@index', 'x=4')
+        assert browser.contents == (
+            'BODY: x=4\n'
+            'CONTENT_TYPE: application/x-www-form-urlencoded'
+            )
