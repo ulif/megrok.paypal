@@ -13,7 +13,7 @@
   <include package="zope.securitypolicy" file="meta.zcml" />
   <include package="grokcore.view" file="meta.zcml" />
 
-  <include package="grok" />
+  <include package="grokcore.view" file="publication_security.zcml" />
   <include package="zope.annotation" />
   <include package="zope.app.appsetup" />
   <include package="zope.app.publication" />
