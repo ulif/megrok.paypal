@@ -16,6 +16,7 @@ long_description = (
 install_requires = [
     'grok',
     'iso3166',
+    'requests',
     'setuptools',
     'zope.component',
     'zope.i18nmessageid',
@@ -26,6 +27,7 @@ install_requires = [
 
 tests_require = [
     # Please do not forget to mention test dependencies also in tox.ini.
+    'webtest',
     'zope.app.wsgi',
     'zope.testbrowser[wsgi]',
     ]
