@@ -28,7 +28,7 @@ class SampleApp(grok.Context):
     pass
 
 
-class SampleAppView(grok.View):
+class SampleAppView1(grok.View):
     # a view for a sample context
     grok.context(SampleApp)
     grok.name('foo')
