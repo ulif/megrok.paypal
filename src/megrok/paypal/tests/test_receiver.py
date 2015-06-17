@@ -58,8 +58,11 @@ class ModifiedReceiver(PayPalIPNReceiver):
         self.call_args = post_var_string
 
 
-class FakePayPal(grok.Context):
+class FakePayPal(grok.Model):
     # a fake paypal to send ipns to.
+
+    # in `last_request` we store the last request received.
+    last_request = None
 
     def __init__(self, mode='success'):
         # mode can be 'success',  'fail', or 'mirror'. 'mirror' means:
@@ -79,10 +82,11 @@ class FakePayPalView(grok.View):
         return 'BODY: %s\nCONTENT_TYPE: %s' % (body_data, content_type)
 
     def render(self):
+        self.context.last_request = self.mirror()
         if self.context.mode == 'success':
             return 'VERIFIED'
         elif self.context.mode == 'mirror':
-            return self.mirror()
+            return self.context.last_request
         return 'INVALID'
 
 
@@ -208,6 +212,10 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.post('http://localhost/fake_paypal/@@index', 'x=2')
         assert browser.contents == 'VERIFIED'
+        assert fake_paypal.last_request == (
+            'BODY: x=2\n'
+            'CONTENT_TYPE: application/x-www-form-urlencoded'
+            )
 
     def test_fake_paypal_fail(self):
         # we can use FakePayPal for testing failed validations
@@ -217,8 +225,12 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.post('http://localhost/fake_paypal/@@index', 'x=3')
         assert browser.contents == 'INVALID'
+        assert fake_paypal.last_request == (
+            'BODY: x=3\n'
+            'CONTENT_TYPE: application/x-www-form-urlencoded'
+            )
 
-    def test_fake_paypal_fail(self):
+    def test_fake_paypal_mirror(self):
         # we can use FakePayPal for mirroring our posts
         fake_paypal = FakePayPal(mode='mirror')
         root = self.layer.getRootFolder()
@@ -226,6 +238,10 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser = Browser()
         browser.post('http://localhost/fake_paypal/@@index', 'x=4')
         assert browser.contents == (
+            'BODY: x=4\n'
+            'CONTENT_TYPE: application/x-www-form-urlencoded'
+            )
+        assert fake_paypal.last_request == (
             'BODY: x=4\n'
             'CONTENT_TYPE: application/x-www-form-urlencoded'
             )
