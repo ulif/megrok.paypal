@@ -45,9 +45,9 @@ def http_server(handler):
 
 
 class Handler(BaseHTTPRequestHandler):
-  def do_GET(self):
-      self.send_response(200)
-      self.wfile.write("\nOk")
+    def do_GET(self):
+        self.send_response(200)
+        self.wfile.write("\nOk")
 
 
 class TestFakePaypalServer(unittest.TestCase):
