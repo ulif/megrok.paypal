@@ -1,6 +1,5 @@
 # Tests for IPN- and other receivers
 import contextlib
-import functools
 import grok
 import socket
 import threading
@@ -33,14 +32,12 @@ def http_server(handler):
     # http://theyougen.blogspot.de/2012/10/
     #        my-best-python-http-test-server-so-far.html
     #
-    def url(port, path):
-        return 'http://%s:%s%s' % (socket.gethostname(), port, path)
     httpd = TCPServer(("", 0), handler)
     t = threading.Thread(target=httpd.serve_forever)
     t.setDaemon(True)
     t.start()
     port = httpd.server_address[1]
-    yield functools.partial(url, port)
+    yield 'http://%s:%s' % (socket.gethostname(), port)
     httpd.shutdown()
 
 
@@ -56,7 +53,7 @@ class TestFakePaypalServer(unittest.TestCase):
         # we can GET docs from server
         import urllib2
         with http_server(Handler) as url:
-            content = urllib2.urlopen(url("/")).read()
+            content = urllib2.urlopen(url).read()
         self.assertEqual(content, 'Ok')
 
 
