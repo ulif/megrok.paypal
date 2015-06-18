@@ -1,5 +1,9 @@
 # Tests for IPN- and other receivers
+import contextlib
+import functools
 import grok
+import socket
+import threading
 import unittest
 import megrok.paypal.tests
 from zope.app.wsgi.testlayer import BrowserLayer
@@ -9,9 +13,51 @@ from zope.publisher.browser import TestRequest
 from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 from megrok.paypal.receiver import PayPalIPNReceiver
+try:                 # py 3.x
+    from http.server import BaseHTTPRequestHandler
+except ImportError:  # py 2.x
+    from BaseHTTPServer import BaseHTTPRequestHandler
+try:
+    from socketserver import TCPServer
+except ImportError:
+    from SocketServer import TCPServer
 
 
 FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
+
+
+@contextlib.contextmanager
+def http_server(handler):
+    # the idea for this context manager comes from
+    #
+    # http://theyougen.blogspot.de/2012/10/
+    #        my-best-python-http-test-server-so-far.html
+    #
+    def url(port, path):
+        return 'http://%s:%s%s' % (socket.gethostname(), port, path)
+    httpd = TCPServer(("", 0), handler)
+    t = threading.Thread(target=httpd.serve_forever)
+    t.setDaemon(True)
+    t.start()
+    port = httpd.server_address[1]
+    yield functools.partial(url, port)
+    httpd.shutdown()
+
+
+class Handler(BaseHTTPRequestHandler):
+  def do_GET(self):
+      self.send_response(200)
+      self.wfile.write("\nOk")
+
+
+class TestFakePaypalServer(unittest.TestCase):
+
+    def test_get(self):
+        # we can GET docs from server
+        import urllib2
+        with http_server(Handler) as url:
+            content = urllib2.urlopen(url("/")).read()
+        self.assertEqual(content, 'Ok')
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
