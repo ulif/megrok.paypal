@@ -46,6 +46,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.wfile.write("\nOk")
 
+    def log_message(self, format, *args):
+        # avoid log output to stderr
+        pass
+
 
 class TestFakePaypalServer(unittest.TestCase):
 
