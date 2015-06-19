@@ -1,8 +1,10 @@
 # Tests for IPN- and other receivers
 import contextlib
 import grok
+import os
 import requests
 import socket
+import ssl
 import threading
 import unittest
 import megrok.paypal.tests
@@ -26,19 +28,28 @@ except ImportError:
 FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
 
 
+CERTFILE = os.path.join(os.path.dirname(__file__), 'fakeserver_ssl.pem')
+
+
 @contextlib.contextmanager
-def http_server(handler):
+def http_server(handler, do_ssl=False):
     # the idea for this context manager comes from
     #
     # http://theyougen.blogspot.de/2012/10/
     #        my-best-python-http-test-server-so-far.html
     #
     httpd = TCPServer(("", 0), handler)
+    proto = "http"
+    if do_ssl:
+        proto = "https"
+        httpd.socket = ssl.wrap_socket(
+            httpd.socket, certfile=CERTFILE, server_side=True,
+            ssl_version=ssl.PROTOCOL_SSLv23)
     t = threading.Thread(target=httpd.serve_forever)
     t.setDaemon(True)
     t.start()
     port = httpd.server_address[1]
-    yield 'http://%s:%s' % (socket.gethostname(), port)
+    yield '%s://%s:%s' % (proto, socket.gethostname(), port)
     httpd.shutdown()
 
 
@@ -69,6 +80,11 @@ class TestFakePaypalServer(unittest.TestCase):
         with http_server(Handler) as url:
             response = requests.post(url)
         self.assertEqual(response.text, u'VERIFIED')
+
+    def test_ssl(self):
+        # we can POST data with SSL
+        with http_server(Handler, do_ssl=True) as url:
+            response = requests.post(url, verify=False)
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
