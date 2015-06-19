@@ -3,7 +3,6 @@ import contextlib
 import grok
 import os
 import requests
-import socket
 import ssl
 import threading
 import unittest
@@ -49,7 +48,7 @@ def http_server(handler, do_ssl=False):
     t.setDaemon(True)
     t.start()
     port = httpd.server_address[1]
-    yield '%s://%s:%s' % (proto, socket.gethostname(), port)
+    yield '%s://localhost:%s' % (proto, port)
     httpd.shutdown()
 
 
@@ -85,6 +84,7 @@ class TestFakePaypalServer(unittest.TestCase):
         # we can POST data with SSL
         with http_server(Handler, do_ssl=True) as url:
             response = requests.post(url, verify=False)
+        self.assertEqual(response.text, u'VERIFIED')
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
