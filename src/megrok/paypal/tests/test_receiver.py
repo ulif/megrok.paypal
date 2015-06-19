@@ -59,9 +59,9 @@ class TestFakePaypalServer(unittest.TestCase):
 
     def test_get(self):
         # we can GET docs from server
-        import urllib2
+        import urllib
         with http_server(Handler) as url:
-            content = urllib2.urlopen(url).read()
+            content = urllib.urlopen(url).read()
         self.assertEqual(content, 'Ok')
 
     def test_post(self):
