@@ -5,7 +5,6 @@ import requests
 import socket
 import threading
 import unittest
-import urllib
 import megrok.paypal.tests
 from zope.app.wsgi.testlayer import BrowserLayer
 from zope.component import getMultiAdapter
@@ -62,8 +61,8 @@ class TestFakePaypalServer(unittest.TestCase):
     def test_get(self):
         # we can GET docs from server
         with http_server(Handler) as url:
-            content = urllib.urlopen(url).read()
-        self.assertEqual(content, 'Ok')
+            response = requests.get(url)
+        self.assertEqual(response.text, 'Ok')
 
     def test_post(self):
         # we can POST data to server
