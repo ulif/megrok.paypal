@@ -1,9 +1,11 @@
 # Tests for IPN- and other receivers
 import contextlib
 import grok
+import requests
 import socket
 import threading
 import unittest
+import urllib
 import megrok.paypal.tests
 from zope.app.wsgi.testlayer import BrowserLayer
 from zope.component import getMultiAdapter
@@ -59,14 +61,12 @@ class TestFakePaypalServer(unittest.TestCase):
 
     def test_get(self):
         # we can GET docs from server
-        import urllib
         with http_server(Handler) as url:
             content = urllib.urlopen(url).read()
         self.assertEqual(content, 'Ok')
 
     def test_post(self):
         # we can POST data to server
-        import requests
         with http_server(Handler) as url:
             response = requests.post(url)
         self.assertEqual(response.text, u'VERIFIED')
