@@ -46,6 +46,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.wfile.write("\nOk")
 
+    def do_POST(self):
+        self.send_response(200)
+        self.wfile.write("\nVERIFIED")
+
     def log_message(self, format, *args):
         # avoid log output to stderr
         pass
@@ -59,6 +63,13 @@ class TestFakePaypalServer(unittest.TestCase):
         with http_server(Handler) as url:
             content = urllib2.urlopen(url).read()
         self.assertEqual(content, 'Ok')
+
+    def test_post(self):
+        # we can POST data to server
+        import requests
+        with http_server(Handler) as url:
+            response = requests.post(url)
+        self.assertEqual(response.text, u'VERIFIED')
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
