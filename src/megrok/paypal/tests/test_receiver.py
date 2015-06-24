@@ -66,6 +66,13 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+class HandlerInvalid(Handler):
+
+    def do_POST(self):
+        self.send_response(200)
+        self.wfile.write("\nINVALID")
+
+
 class TestFakePaypalServer(unittest.TestCase):
 
     def test_get(self):
@@ -85,6 +92,12 @@ class TestFakePaypalServer(unittest.TestCase):
         with http_server(Handler, do_ssl=True) as url:
             response = requests.post(url, verify=False)
         self.assertEqual(response.text, u'VERIFIED')
+
+    def test_invalid_post(self):
+        # we can POST and retrieve invalid
+        with http_server(HandlerInvalid) as url:
+            response = requests.post(url)
+        self.assertEqual(response.text, u'INVALID')
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
