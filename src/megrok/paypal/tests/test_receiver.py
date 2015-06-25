@@ -31,13 +31,14 @@ CERTFILE = os.path.join(os.path.dirname(__file__), 'fakeserver_ssl.pem')
 
 
 @contextlib.contextmanager
-def http_server(handler, do_ssl=False):
+def http_server(handler, do_ssl=False, paypal_mode='valid'):
     # the idea for this context manager comes from
     #
     # http://theyougen.blogspot.de/2012/10/
     #        my-best-python-http-test-server-so-far.html
     #
     httpd = TCPServer(("", 0), handler)
+    httpd.paypal_mode = paypal_mode
     proto = "http"
     if do_ssl:
         proto = "https"
@@ -59,18 +60,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.send_response(200)
-        self.wfile.write("\nVERIFIED")
+        if self.server.paypal_mode == 'valid':
+            self.wfile.write("\nVERIFIED")
+        else:
+            self.wfile.write("\nINVALID")
 
     def log_message(self, format, *args):
         # avoid log output to stderr
         pass
-
-
-class HandlerInvalid(Handler):
-
-    def do_POST(self):
-        self.send_response(200)
-        self.wfile.write("\nINVALID")
 
 
 class TestFakePaypalServer(unittest.TestCase):
@@ -95,7 +92,7 @@ class TestFakePaypalServer(unittest.TestCase):
 
     def test_invalid_post(self):
         # we can POST and retrieve invalid
-        with http_server(HandlerInvalid) as url:
+        with http_server(Handler, paypal_mode="invalid") as url:
             response = requests.post(url)
         self.assertEqual(response.text, u'INVALID')
 
