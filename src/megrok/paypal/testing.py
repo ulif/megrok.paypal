@@ -1,8 +1,8 @@
 # Support for testing.
-import contextlib
 import os
 import ssl
 import threading
+from contextlib import contextmanager
 try:                        # Python 3.x
     from socketserver import TCPServer
 except ImportError:         # Python 2.x
@@ -17,7 +17,7 @@ CERTFILE = os.path.join(
     os.path.dirname(__file__), 'tests', 'fakeserver_ssl.pem')
 
 
-@contextlib.contextmanager
+@contextmanager
 def http_server(handler, do_ssl=False, paypal_mode='valid'):
     # the idea for this context manager comes from
     #
