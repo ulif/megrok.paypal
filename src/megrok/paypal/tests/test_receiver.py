@@ -1,10 +1,5 @@
 # Tests for IPN- and other receivers
-import contextlib
 import grok
-import os
-import requests
-import ssl
-import threading
 import unittest
 import megrok.paypal.tests
 from zope.app.wsgi.testlayer import BrowserLayer
@@ -14,14 +9,6 @@ from zope.publisher.browser import TestRequest
 from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 from megrok.paypal.receiver import PayPalIPNReceiver
-try:                 # py 3.x
-    from http.server import BaseHTTPRequestHandler
-except ImportError:  # py 2.x
-    from BaseHTTPServer import BaseHTTPRequestHandler
-try:
-    from socketserver import TCPServer
-except ImportError:
-    from SocketServer import TCPServer
 
 
 FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
