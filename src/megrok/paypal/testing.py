@@ -17,29 +17,6 @@ CERTFILE = os.path.join(
     os.path.dirname(__file__), 'tests', 'fakeserver_ssl.pem')
 
 
-@contextmanager
-def http_server(handler, do_ssl=False, paypal_mode='valid'):
-    # the idea for this context manager comes from
-    #
-    # http://theyougen.blogspot.de/2012/10/
-    #        my-best-python-http-test-server-so-far.html
-    #
-    httpd = TCPServer(("", 0), handler)
-    httpd.paypal_mode = paypal_mode
-    proto = "http"
-    if do_ssl:
-        proto = "https"
-        httpd.socket = ssl.wrap_socket(
-            httpd.socket, certfile=CERTFILE, server_side=True,
-            ssl_version=ssl.PROTOCOL_SSLv23)
-    t = threading.Thread(target=httpd.serve_forever)
-    t.setDaemon(True)
-    t.start()
-    port = httpd.server_address[1]
-    try:
-        yield '%s://localhost:%s' % (proto, port)
-    finally:
-        httpd.shutdown()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -57,3 +34,30 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         # avoid log output to stderr
         pass
+
+
+@contextmanager
+def http_server(handler=None, do_ssl=False, paypal_mode='valid'):
+    # the idea for this context manager comes from
+    #
+    # http://theyougen.blogspot.de/2012/10/
+    #        my-best-python-http-test-server-so-far.html
+    #
+    if handler is None:
+        handler = Handler()
+    httpd = TCPServer(("", 0), handler)
+    httpd.paypal_mode = paypal_mode
+    proto = "http"
+    if do_ssl:
+        proto = "https"
+        httpd.socket = ssl.wrap_socket(
+            httpd.socket, certfile=CERTFILE, server_side=True,
+            ssl_version=ssl.PROTOCOL_SSLv23)
+    t = threading.Thread(target=httpd.serve_forever)
+    t.setDaemon(True)
+    t.start()
+    port = httpd.server_address[1]
+    try:
+        yield '%s://localhost:%s' % (proto, port)
+    finally:
+        httpd.shutdown()
