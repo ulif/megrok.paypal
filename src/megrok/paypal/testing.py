@@ -36,8 +36,10 @@ def http_server(handler, do_ssl=False, paypal_mode='valid'):
     t.setDaemon(True)
     t.start()
     port = httpd.server_address[1]
-    yield '%s://localhost:%s' % (proto, port)
-    httpd.shutdown()
+    try:
+        yield '%s://localhost:%s' % (proto, port)
+    finally:
+        httpd.shutdown()
 
 
 class Handler(BaseHTTPRequestHandler):
