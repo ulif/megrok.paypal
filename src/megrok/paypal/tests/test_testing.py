@@ -6,6 +6,12 @@ from megrok.paypal.testing import http_server, Handler
 
 class TestFakePaypalServer(unittest.TestCase):
 
+    def test_no_handler(self):
+        # if we do not pass a handler class, one is picked for us
+        with http_server() as url:
+            response = requests.get(url)
+        self.assertEqual(response.text, 'Ok')
+
     def test_get(self):
         # we can GET docs from server
         with http_server(Handler) as url:
