@@ -17,8 +17,6 @@ CERTFILE = os.path.join(
     os.path.dirname(__file__), 'tests', 'fakeserver_ssl.pem')
 
 
-
-
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
