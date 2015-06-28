@@ -37,15 +37,15 @@ class Handler(BaseHTTPRequestHandler):
 
 
 @contextmanager
-def http_server(handler=None, do_ssl=False, paypal_mode='valid'):
+def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
     # the idea for this context manager comes from
     #
     # http://theyougen.blogspot.de/2012/10/
     #        my-best-python-http-test-server-so-far.html
     #
-    if handler is None:
-        handler = Handler
-    httpd = TCPServer(("", 0), handler)
+    if handler_cls is None:
+        handler_cls = Handler
+    httpd = TCPServer(("", 0), handler_cls)
     httpd.paypal_mode = paypal_mode
     proto = "http"
     if do_ssl:
