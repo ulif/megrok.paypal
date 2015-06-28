@@ -44,7 +44,7 @@ def http_server(handler=None, do_ssl=False, paypal_mode='valid'):
     #        my-best-python-http-test-server-so-far.html
     #
     if handler is None:
-        handler = Handler()
+        handler = Handler
     httpd = TCPServer(("", 0), handler)
     httpd.paypal_mode = paypal_mode
     proto = "http"
