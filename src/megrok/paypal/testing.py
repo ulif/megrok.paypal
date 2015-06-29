@@ -23,6 +23,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write("\nOk")
 
     def do_POST(self):
+        self.read_request_body()
         self.send_response(200)
         if self.server.paypal_mode == 'valid':
             self.wfile.write("\nVERIFIED")
@@ -32,6 +33,15 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         # avoid log output to stderr
         pass
+
+    def read_request_body(self):
+        """Read request body and store it at server.
+        """
+        length = int(self.headers.get('Content-Length', 0))
+        posted_body = None
+        if length:
+            posted_body = self.rfile.read(length)
+        self.server.last_request_body = posted_body
 
 
 @contextmanager
@@ -45,6 +55,7 @@ def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
         handler_cls = Handler
     httpd = TCPServer(("", 0), handler_cls)
     httpd.paypal_mode = paypal_mode
+    httpd.last_request_body = None
     proto = "http"
     if do_ssl:
         proto = "https"
