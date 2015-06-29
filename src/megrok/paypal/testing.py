@@ -66,7 +66,8 @@ def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
     t.setDaemon(True)
     t.start()
     port = httpd.server_address[1]
+    httpd.url = '%s://localhost:%s' % (proto, port)
     try:
-        yield '%s://localhost:%s' % (proto, port)
+        yield httpd
     finally:
         httpd.shutdown()

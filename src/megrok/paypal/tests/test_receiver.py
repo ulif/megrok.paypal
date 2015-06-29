@@ -35,8 +35,8 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         # we can validate instant payment messages
         receiver = PayPalIPNReceiver()
         result = None
-        with http_server(paypal_mode='valid') as url:
-            receiver.validation_uri = url
+        with http_server(paypal_mode='valid') as server:
+            receiver.validation_uri = server.url
             result = receiver.validate('some-fake-data')
         assert result == "VERIFIED"
 
