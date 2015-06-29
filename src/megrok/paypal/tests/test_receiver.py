@@ -38,7 +38,9 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         with http_server(paypal_mode='valid') as server:
             receiver.validation_uri = server.url
             result = receiver.validate('some-fake-data')
+            sent_body = server.last_request_body
         assert result == "VERIFIED"
+        assert sent_body == 'cmd=_notify-validate&some-fake-data'
 
 
 class SampleApp(grok.Context):

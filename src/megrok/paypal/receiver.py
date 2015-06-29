@@ -36,7 +36,8 @@ class PayPalIPNReceiver(grok.Container):
         if not self.validation_uri:
             return None
         response = requests.post(
-            self.validation_uri, data=post_var_string)
+            self.validation_uri,
+            data='cmd=_notify-validate&%s' % post_var_string)
         return response.text
 
 
