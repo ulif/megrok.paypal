@@ -23,7 +23,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write("\nOk")
 
     def do_POST(self):
-        self.read_request_body()
+        self.read_request_data()
         self.send_response(200)
         if self.server.paypal_mode == 'valid':
             self.wfile.write("\nVERIFIED")
@@ -34,9 +34,11 @@ class Handler(BaseHTTPRequestHandler):
         # avoid log output to stderr
         pass
 
-    def read_request_body(self):
-        """Read request body and store it at server.
+    def read_request_data(self):
+        """Read request data (body, content-type) and store it at server.
         """
+        self.server.last_request_content_type = self.headers.get(
+            'Content-Type', None)
         length = int(self.headers.get('Content-Length', 0))
         posted_body = None
         if length:
@@ -56,6 +58,7 @@ def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
     httpd = TCPServer(("", 0), handler_cls)
     httpd.paypal_mode = paypal_mode
     httpd.last_request_body = None
+    httpd.last_request_content_type = None
     proto = "http"
     if do_ssl:
         proto = "https"
