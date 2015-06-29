@@ -35,3 +35,13 @@ class TestFakePaypalServer(unittest.TestCase):
         with http_server(Handler, paypal_mode="invalid") as server:
             response = requests.post(server.url)
         self.assertEqual(response.text, u'INVALID')
+
+    def test_post_data_stored(self):
+        # data we POST to the server is stored
+        with http_server(Handler) as server:
+            requests.post(server.url, data="var1=1&var2=foo")
+            body1 = server.last_request_body
+            requests.post(server.url, data="var2=bar&var1=baz")
+            body2 = server.last_request_body
+        assert body1 == 'var1=1&var2=foo'
+        assert body2 == 'var2=bar&var1=baz'
