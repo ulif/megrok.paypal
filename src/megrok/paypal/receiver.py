@@ -32,6 +32,12 @@ class PayPalIPNReceiver(grok.Container):
 
     def validate(self, post_var_string):
         """Ask Paypal for validation.
+
+        Sends an HTTP POST request to `validation_uri` and returns the
+        result, i.e. the content of the received document.
+
+        Returns `None` if no `validation_uri` is set or the
+        `post_var_string` is empty.
         """
         if not self.validation_uri:
             return None
