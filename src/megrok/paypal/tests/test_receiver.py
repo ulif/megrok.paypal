@@ -27,9 +27,9 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         # we require a notification URI for validation requests
         receiver = PayPalIPNReceiver()
         receiver.validation_uri = None
-        assert receiver.send_validate('foo') is None
+        assert receiver.validate('foo') is None
         receiver.validation_uri = ''
-        assert receiver.send_validate('bar') is None
+        assert receiver.validate('bar') is None
 
     def test_validate(self):
         # we can validate instant payment messages
@@ -37,7 +37,7 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         result = None
         with http_server(paypal_mode='valid') as url:
             receiver.validation_uri = url
-            result = receiver.send_validate('some-fake-data')
+            result = receiver.validate('some-fake-data')
         assert result == "VERIFIED"
 
 
@@ -214,13 +214,13 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser.post("http://localhost/app", "got_it=1")
         assert receiver.call_args == 'got_it=1'
 
-    def test_send_validate_no_action_wo_validation_uri(self):
+    def test_validate_no_action_wo_validation_uri(self):
         #  a receiver does not perform any action w/o a validation_uri set.
         receiver = PayPalIPNReceiver()
         receiver.validation_uri = ''
-        assert receiver.send_validate('x=1') is None
+        assert receiver.validate('x=1') is None
         receiver.validation_uri = None
-        assert receiver.send_validate('x=1') is None
+        assert receiver.validate('x=1') is None
 
     def test_fake_paypal_success(self):
         # we can use FakePayPal for testing successful validations

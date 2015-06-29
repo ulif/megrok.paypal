@@ -30,8 +30,8 @@ class PayPalIPNReceiver(grok.Container):
         """
         pass
 
-    def send_validate(self, post_var_string):
-        """Request validation from PayPal.
+    def validate(self, post_var_string):
+        """Ask Paypal for validation.
         """
         if not self.validation_uri:
             return None
