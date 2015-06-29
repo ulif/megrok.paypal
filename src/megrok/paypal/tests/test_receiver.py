@@ -9,6 +9,7 @@ from zope.publisher.browser import TestRequest
 from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 from megrok.paypal.receiver import PayPalIPNReceiver
+from megrok.paypal.testing import http_server
 
 
 FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
@@ -21,6 +22,23 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         receiver = PayPalIPNReceiver()
         verifyClass(IPayPalIPNReceiver, PayPalIPNReceiver)
         verifyObject(IPayPalIPNReceiver, receiver)
+
+    def test_validate_no_notification_uri(self):
+        # we require a notification URI for validation requests
+        receiver = PayPalIPNReceiver()
+        receiver.validation_uri = None
+        assert receiver.send_validate('foo') is None
+        receiver.validation_uri = ''
+        assert receiver.send_validate('bar') is None
+
+    def test_validate(self):
+        # we can validate instant payment messages
+        receiver = PayPalIPNReceiver()
+        result = None
+        with http_server(paypal_mode='valid') as url:
+            receiver.validation_uri = url
+            result = receiver.send_validate('some-fake-data')
+        assert result == "VERIFIED"
 
 
 class SampleApp(grok.Context):

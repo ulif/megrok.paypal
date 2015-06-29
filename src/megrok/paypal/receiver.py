@@ -12,6 +12,7 @@ IPN simulator:
 
 """
 import grok
+import requests
 from megrok.paypal.interfaces import IPayPalIPNReceiver
 
 
@@ -32,7 +33,11 @@ class PayPalIPNReceiver(grok.Container):
     def send_validate(self, post_var_string):
         """Request validation from PayPal.
         """
-        pass
+        if not self.validation_uri:
+            return None
+        response = requests.post(
+            self.validation_uri, data=post_var_string)
+        return response.text
 
 
 class NotifyView(grok.View):
