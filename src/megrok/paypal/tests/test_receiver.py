@@ -34,7 +34,6 @@ class TestPayPalIPNReceiver(unittest.TestCase):
     def test_validate_no_post_var_string(self):
         # if we got no post-var-string (or it is empty) we do not validate
         receiver = PayPalIPNReceiver()
-        receiver.validation_uri = None
         assert receiver.validate(None) is None
         assert receiver.validate('') is None
 
