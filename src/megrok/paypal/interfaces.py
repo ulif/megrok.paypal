@@ -858,3 +858,42 @@ class IPayPalIPNReceiver(Interface):
 
         If `response_uri` is not set or empty, no action is performed.
         """
+
+
+class IInstantPaymentNotification(Interface):
+    """A notification about payments (maybe) received from PayPal.
+    """
+    data = schema.Text(
+        title=u"Data",
+        description=u"Data as sent by paypal. Describes the payment.",
+        default=None,
+        required=True,
+        )
+
+    timestamp_received = schema.Datetime(
+        title=u"Received",
+        description=u"Datetime when we received this notification",
+        default=None,
+        required=True,
+        )
+
+    timestamp_validation_requested = schema.Datetime(
+        title=u"Validation requested",
+        description=u"Datetime when validation request was sent back.",
+        default=None,
+        required=True,
+        )
+
+    timestamp_validation_received = schema.Datetime(
+        title=u"Validation received",
+        description=u"Datetime when validation was received",
+        default=None,
+        required=True,
+        )
+
+    final_verdict = schema.Text(
+        title=u"Final validation result.",
+        description=u"A string sent by paypal.",
+        default=None,
+        required=True,
+        )
