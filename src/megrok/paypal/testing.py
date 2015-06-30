@@ -46,42 +46,33 @@ class Handler(BaseHTTPRequestHandler):
         self.server.last_request_body = posted_body
 
 
-class StoppableHTTPServer(object):
+class StoppableHTTPServer(TCPServer):
 
     url = None
-    server = None
     do_ssl = False
 
-    @property
-    def last_request_body(self):
-        return self.server.last_request_body
-
-    @property
-    def last_request_content_type(self):
-        return self.server.last_request_content_type
-
     def __init__(self, do_ssl=False, paypal_mode='valid'):
+        TCPServer.__init__(self, ("", 0), Handler)  # old-style base?
         self.do_ssl = do_ssl
-        self.server = TCPServer(("", 0), Handler)
-        self.server.paypal_mode = paypal_mode
-        self.server.last_request_body = None
-        self.server.last_request_content_type = None
+        self.paypal_mode = paypal_mode
+        self.last_request_body = None
+        self.last_request_content_type = None
 
     def start(self):
         proto = "http"
         if self.do_ssl:
             proto = "https"
-            self.server.socket = ssl.wrap_socket(
-                self.server.socket, certfile=CERTFILE, server_side=True,
+            self.socket = ssl.wrap_socket(
+                self.socket, certfile=CERTFILE, server_side=True,
                 ssl_version=ssl.PROTOCOL_SSLv23)
-        t = threading.Thread(target=self.server.serve_forever)
+        t = threading.Thread(target=self.serve_forever)
         t.setDaemon(True)
         t.start()
-        port = self.server.server_address[1]
+        port = self.server_address[1]
         self.url = '%s://localhost:%s' % (proto, port)
 
     def shutdown(self):
-        self.server.shutdown()
+        return TCPServer.shutdown(self)
 
 
 @contextmanager
