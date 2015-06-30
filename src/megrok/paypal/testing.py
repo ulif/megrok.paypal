@@ -46,31 +46,53 @@ class Handler(BaseHTTPRequestHandler):
         self.server.last_request_body = posted_body
 
 
+class StoppableHTTPServer(object):
+
+    url = None
+    server = None
+    do_ssl = False
+
+    @property
+    def last_request_body(self):
+        return self.server.last_request_body
+
+    @property
+    def last_request_content_type(self):
+        return self.server.last_request_content_type
+
+    def __init__(self, handler_cls, do_ssl=False, paypal_mode='valid'):
+        if handler_cls is None:
+            handler_cls = Handler
+        self.do_ssl = do_ssl
+        self.server = TCPServer(("", 0), handler_cls)
+        self.server.paypal_mode = paypal_mode
+        self.server.last_request_body = None
+        self.server.last_request_content_type = None
+
+    def start(self):
+        proto = "http"
+        if self.do_ssl:
+            proto = "https"
+            self.server.socket = ssl.wrap_socket(
+                self.server.socket, certfile=CERTFILE, server_side=True,
+                ssl_version=ssl.PROTOCOL_SSLv23)
+        t = threading.Thread(target=self.server.serve_forever)
+        t.setDaemon(True)
+        t.start()
+        port = self.server.server_address[1]
+        self.url = '%s://localhost:%s' % (proto, port)
+
+    def shutdown(self):
+        self.server.shutdown()
+
+
 @contextmanager
 def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
-    # the idea for this context manager comes from
-    #
-    # http://theyougen.blogspot.de/2012/10/
-    #        my-best-python-http-test-server-so-far.html
-    #
-    if handler_cls is None:
-        handler_cls = Handler
-    httpd = TCPServer(("", 0), handler_cls)
-    httpd.paypal_mode = paypal_mode
-    httpd.last_request_body = None
-    httpd.last_request_content_type = None
-    proto = "http"
-    if do_ssl:
-        proto = "https"
-        httpd.socket = ssl.wrap_socket(
-            httpd.socket, certfile=CERTFILE, server_side=True,
-            ssl_version=ssl.PROTOCOL_SSLv23)
-    t = threading.Thread(target=httpd.serve_forever)
-    t.setDaemon(True)
-    t.start()
-    port = httpd.server_address[1]
-    httpd.url = '%s://localhost:%s' % (proto, port)
+    server = StoppableHTTPServer(
+        handler_cls=handler_cls, do_ssl=do_ssl, paypal_mode=paypal_mode
+        )
+    server.start()
     try:
-        yield httpd
+        yield server
     finally:
-        httpd.shutdown()
+        server.shutdown()
