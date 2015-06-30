@@ -60,11 +60,9 @@ class StoppableHTTPServer(object):
     def last_request_content_type(self):
         return self.server.last_request_content_type
 
-    def __init__(self, handler_cls, do_ssl=False, paypal_mode='valid'):
-        if handler_cls is None:
-            handler_cls = Handler
+    def __init__(self, do_ssl=False, paypal_mode='valid'):
         self.do_ssl = do_ssl
-        self.server = TCPServer(("", 0), handler_cls)
+        self.server = TCPServer(("", 0), Handler)
         self.server.paypal_mode = paypal_mode
         self.server.last_request_body = None
         self.server.last_request_content_type = None
@@ -87,10 +85,8 @@ class StoppableHTTPServer(object):
 
 
 @contextmanager
-def http_server(handler_cls=None, do_ssl=False, paypal_mode='valid'):
-    server = StoppableHTTPServer(
-        handler_cls=handler_cls, do_ssl=do_ssl, paypal_mode=paypal_mode
-        )
+def http_server(do_ssl=False, paypal_mode='valid'):
+    server = StoppableHTTPServer(do_ssl=do_ssl, paypal_mode=paypal_mode)
     server.start()
     try:
         yield server
