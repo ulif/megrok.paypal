@@ -59,6 +59,12 @@ class TestInstantPaymentNotfication(unittest.TestCase):
         verifyClass(IInstantPaymentNotification, InstantPaymentNotification)
         verifyObject(IInstantPaymentNotification, ipn)
 
+    def test_constructor(self):
+        # we can set data with the constructor.
+        ipn = InstantPaymentNotification("some-data")
+        assert ipn.data == "some-data"
+        assert ipn.timestamp_received is not None
+
 
 class SampleApp(grok.Context):
     # a sample context

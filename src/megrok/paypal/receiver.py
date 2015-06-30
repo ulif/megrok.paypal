@@ -11,6 +11,7 @@ IPN simulator:
           classic/ipn/integration-guide/IPNSimulator/
 
 """
+import datetime
 import grok
 import requests
 from megrok.paypal.interfaces import (
@@ -22,6 +23,9 @@ class InstantPaymentNotification(grok.Model):
 
     as received by paypal (or other parties that pretend to be
     paypal).
+
+    If `data` is given at construction time, we also set a timestamp of
+    current datetime (UTC).
     """
     grok.implements(IInstantPaymentNotification)
 
@@ -30,6 +34,10 @@ class InstantPaymentNotification(grok.Model):
     timestamp_received = None
     timestamp_validation_requested = None
     timestamp_validation_received = None
+
+    def __init__(self, data=None):
+        self.data = data
+        self.timestamp_received = datetime.datetime.utcnow()
 
 
 class PayPalIPNReceiver(grok.Container):
