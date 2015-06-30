@@ -7,8 +7,10 @@ from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass, verifyObject
 from zope.publisher.browser import TestRequest
 from zope.testbrowser.wsgi import Browser
-from megrok.paypal.interfaces import IPayPalIPNReceiver
-from megrok.paypal.receiver import PayPalIPNReceiver
+from megrok.paypal.interfaces import (
+    IPayPalIPNReceiver, IInstantPaymentNotification, )
+from megrok.paypal.receiver import (
+    PayPalIPNReceiver, InstantPaymentNotification, )
 from megrok.paypal.testing import http_server
 
 
@@ -47,6 +49,15 @@ class TestPayPalIPNReceiver(unittest.TestCase):
             sent_body = server.last_request_body
         assert result == "VERIFIED"
         assert sent_body == 'cmd=_notify-validate&some-fake-data'
+
+
+class TestInstantPaymentNotfication(unittest.TestCase):
+
+    def test_iface(self):
+        # ensure we fullfill all interface contracts
+        ipn = InstantPaymentNotification()
+        verifyClass(IInstantPaymentNotification, InstantPaymentNotification)
+        verifyObject(IInstantPaymentNotification, ipn)
 
 
 class SampleApp(grok.Context):

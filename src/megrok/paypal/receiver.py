@@ -13,7 +13,23 @@ IPN simulator:
 """
 import grok
 import requests
-from megrok.paypal.interfaces import IPayPalIPNReceiver
+from megrok.paypal.interfaces import (
+    IPayPalIPNReceiver, IInstantPaymentNotification)
+
+
+class InstantPaymentNotification(grok.Model):
+    """Metadata about an instant payment notification
+
+    as received by paypal (or other parties that pretend to be
+    paypal).
+    """
+    grok.implements(IInstantPaymentNotification)
+
+    data = None
+    final_verdict = None
+    timestamp_received = None
+    timestamp_validation_requested = None
+    timestamp_validation_received = None
 
 
 class PayPalIPNReceiver(grok.Container):
