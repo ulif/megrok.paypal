@@ -47,7 +47,24 @@ class Handler(BaseHTTPRequestHandler):
 
 
 class StoppableHTTPServer(TCPServer):
+    """An HTTP server for testing.
 
+    This server, when `start()`ed, runs `serve_forever` in a separate
+    thread, so we can `shutdown()` it at any time.
+
+    This server accepts no port or IP to bind to. Instead it binds to
+    localhost and binds to some arbitrary unused port. Use `url()` to
+    get the URL of the server, including port. `server_address` will
+    give that information as well.
+
+    If `do_ssl` is True, we use the locally stored certificate for SSL
+    communication.
+
+    This server handles requests via a `Handler` instance, which
+    normally stores request bodies and content types in attributes
+    `last_request_body`, `last_request_content_type`. See tests for
+    samples.
+    """
     url = None
     do_ssl = False
 
@@ -59,6 +76,8 @@ class StoppableHTTPServer(TCPServer):
         self.last_request_content_type = None
 
     def start(self):
+        """Start server in separate thread.
+        """
         proto = "http"
         if self.do_ssl:
             proto = "https"
