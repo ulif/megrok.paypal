@@ -21,7 +21,7 @@ class PayPalIPNReceiver(grok.Container):
     """
     grok.implements(IPayPalIPNReceiver)
 
-    validation_uri = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
+    validation_url = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
 
     def got_notification(self, post_var_string):
         """The receiver got an instant payment notification (IPN).
@@ -33,18 +33,18 @@ class PayPalIPNReceiver(grok.Container):
     def validate(self, post_var_string):
         """Ask Paypal for validation.
 
-        Sends an HTTP POST request to `validation_uri` and returns the
+        Sends an HTTP POST request to `validation_url` and returns the
         result, i.e. the content of the received document.
 
-        Returns `None` if no `validation_uri` is set or the
+        Returns `None` if no `validation_url` is set or the
         `post_var_string` is empty.
         """
-        if not self.validation_uri:
+        if not self.validation_url:
             return None
         if not post_var_string:
             return None
         response = requests.post(
-            self.validation_uri,
+            self.validation_url,
             data='cmd=_notify-validate&%s' % post_var_string)
         return response.text
 

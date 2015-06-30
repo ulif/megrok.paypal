@@ -839,9 +839,9 @@ class IPayPalStandardBase(Interface):
 class IPayPalIPNReceiver(Interface):
     """Temporarily a marker interface.
     """
-    validation_uri = schema.URI(
-        title=u"URI to contact for validation",
-        description=u"This URI is used to validate IPNs we get.",
+    validation_url = schema.URI(
+        title=u"URL to contact for validation",
+        description=u"This URL is used to validate IPNs we get.",
         default="https://www.sandbox.paypal.com/cgi-bin/webscr/",
         required=True,
     )

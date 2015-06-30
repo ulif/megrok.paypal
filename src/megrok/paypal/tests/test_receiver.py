@@ -23,12 +23,12 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         verifyClass(IPayPalIPNReceiver, PayPalIPNReceiver)
         verifyObject(IPayPalIPNReceiver, receiver)
 
-    def test_validate_no_notification_uri(self):
-        # we require a notification URI for validation requests
+    def test_validate_no_notification_url(self):
+        # we require a notification URL for validation requests
         receiver = PayPalIPNReceiver()
-        receiver.validation_uri = None
+        receiver.validation_url = None
         assert receiver.validate('foo') is None
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         assert receiver.validate('bar') is None
 
     def test_validate_no_post_var_string(self):
@@ -42,7 +42,7 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         receiver = PayPalIPNReceiver()
         result = None
         with http_server(paypal_mode='valid') as server:
-            receiver.validation_uri = server.url
+            receiver.validation_url = server.url
             result = receiver.validate('some-fake-data')
             sent_body = server.last_request_body
         assert result == "VERIFIED"
@@ -186,7 +186,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_returns_200_Ok(self):
         # if we deliver normal data we will get a 200 Ok.
         receiver = PayPalIPNReceiver()
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.open('http://localhost/app/@@index')
@@ -195,7 +195,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_returns_empty_body(self):
         # if we deliver normal data we will return with an empty doc.
         receiver = PayPalIPNReceiver()
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.open('http://localhost/app/@@index')
@@ -204,7 +204,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_calls_got_notification(self):
         # the index view informs the receiver.
         receiver = ModifiedReceiver()
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         browser.post("http://localhost/app/@@index", "y=1&x=2")
@@ -215,19 +215,19 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
     def test_index_is_default_view(self):
         # the index view is called by default.
         receiver = ModifiedReceiver()
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         self.layer.getRootFolder()['app'] = receiver
         browser = Browser()
         # we do not give a view name here.
         browser.post("http://localhost/app", "got_it=1")
         assert receiver.call_args == 'got_it=1'
 
-    def test_validate_no_action_wo_validation_uri(self):
-        #  a receiver does not perform any action w/o a validation_uri set.
+    def test_validate_no_action_wo_validation_url(self):
+        #  a receiver does not perform any action w/o a validation_url set.
         receiver = PayPalIPNReceiver()
-        receiver.validation_uri = ''
+        receiver.validation_url = ''
         assert receiver.validate('x=1') is None
-        receiver.validation_uri = None
+        receiver.validation_url = None
         assert receiver.validate('x=1') is None
 
     def test_fake_paypal_success(self):
