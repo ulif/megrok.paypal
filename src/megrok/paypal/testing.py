@@ -93,6 +93,12 @@ class StoppableHTTPServer(TCPServer):
     def shutdown(self):
         return TCPServer.shutdown(self)
 
+    def reset(self):
+        """Set default values.
+        """
+        self.paypal_mode = 'valid'
+        self.do_ssl = False
+
 
 @contextmanager
 def http_server(do_ssl=False, paypal_mode='valid'):
@@ -118,3 +124,7 @@ class HTTPServerLayer(object):
     @classmethod
     def tearDown(cls):
         cls.server.shutdown()
+
+    @classmethod
+    def setUpTest(cls):
+        cls.server.reset()
