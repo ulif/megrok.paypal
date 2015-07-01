@@ -101,6 +101,8 @@ class StoppableHTTPServer(TCPServer):
 
 @contextmanager
 def http_server(do_ssl=False, paypal_mode='valid'):
+    """A context manager providing a running StoppableHTTPServer.
+    """
     server = StoppableHTTPServer(do_ssl=do_ssl, paypal_mode=paypal_mode)
     server.start()
     try:
@@ -114,7 +116,10 @@ class HTTPServerLayer(object):
 
     Use it as a layer in a test case. Provides `server` and `ssl_server`
     attributes, both instances of a running `StoppableHTTPServer`. The
-    latter one, `ssl_server` talks over SSL.
+    latter one, `ssl_server`, talks over SSL.
+
+    Before each test we reset servers to default values
+    (paypal_mode="valid").
     """
     @classmethod
     def setUp(cls):
