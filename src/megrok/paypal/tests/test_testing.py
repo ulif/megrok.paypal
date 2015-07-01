@@ -1,8 +1,7 @@
 # tests for testing.
 import requests
 import unittest
-from megrok.paypal.testing import (
-    http_server, StoppableHTTPServer, HTTPServerLayer)
+from megrok.paypal.testing import http_server, HTTPServerLayer
 
 
 class TestHTTPServerContextManager(unittest.TestCase):
@@ -30,19 +29,17 @@ class TestStoppableHTTPServer(unittest.TestCase):
 
     def test_post_data_stored(self):
         # data we POST to the server is stored
-        with http_server() as server:
-            requests.post(self.layer.server.url, data="var1=1&var2=foo")
-            body1 = self.layer.server.last_request_body
-            requests.post(self.layer.server.url, data="var2=bar&var1=baz")
-            body2 = self.layer.server.last_request_body
+        requests.post(self.layer.server.url, data="var1=1&var2=foo")
+        body1 = self.layer.server.last_request_body
+        requests.post(self.layer.server.url, data="var2=bar&var1=baz")
+        body2 = self.layer.server.last_request_body
         assert body1 == 'var1=1&var2=foo'
         assert body2 == 'var2=bar&var1=baz'
 
     def test_post_content_type_stored(self):
         # the content type of last request is stored
-        with http_server() as server:
-            requests.post(self.layer.server.url, data={'var': 'value'})
-            content_type = self.layer.server.last_request_content_type
+        requests.post(self.layer.server.url, data={'var': 'value'})
+        content_type = self.layer.server.last_request_content_type
         assert content_type == 'application/x-www-form-urlencoded'
 
     def test_ssl(self):
