@@ -45,17 +45,13 @@ class TestStoppableHTTPServer(unittest.TestCase):
             content_type = self.layer.server.last_request_content_type
         assert content_type == 'application/x-www-form-urlencoded'
 
-
-class TestFakePaypalServer(object): #unittest.TestCase):
-
     def test_ssl(self):
         # we can POST data with SSL
-        with http_server(do_ssl=True) as server:
-            response = requests.post(server.url, verify=False)
+        response = requests.post(self.layer.ssl_server.url, verify=False)
         self.assertEqual(response.text, u'VERIFIED')
 
     def test_invalid_post(self):
         # we can POST and retrieve invalid
-        with http_server(paypal_mode="invalid") as server:
-            response = requests.post(server.url)
+        self.layer.server.paypal_mode = 'invalid'
+        response = requests.post(self.layer.server.url)
         self.assertEqual(response.text, u'INVALID')
