@@ -102,3 +102,19 @@ def http_server(do_ssl=False, paypal_mode='valid'):
         yield server
     finally:
         server.shutdown()
+
+
+class HTTPServerLayer(object):
+    """A test layer, usable by `zope.testrunner`.
+
+    Use it as a layer in a test case. Provides `server` attribute, an
+    instance if a running `StoppableHTTPServer`.
+    """
+    @classmethod
+    def setUp(cls):
+        cls.server = StoppableHTTPServer()
+        cls.server.start()
+
+    @classmethod
+    def tearDown(cls):
+        cls.server.shutdown()
