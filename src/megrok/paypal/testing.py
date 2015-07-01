@@ -97,7 +97,6 @@ class StoppableHTTPServer(TCPServer):
         """Set default values.
         """
         self.paypal_mode = 'valid'
-        self.do_ssl = False
 
 
 @contextmanager
@@ -113,18 +112,23 @@ def http_server(do_ssl=False, paypal_mode='valid'):
 class HTTPServerLayer(object):
     """A test layer, usable by `zope.testrunner`.
 
-    Use it as a layer in a test case. Provides `server` attribute, an
-    instance if a running `StoppableHTTPServer`.
+    Use it as a layer in a test case. Provides `server` and `ssl_server`
+    attributes, both instances of a running `StoppableHTTPServer`. The
+    latter one, `ssl_server` talks over SSL.
     """
     @classmethod
     def setUp(cls):
         cls.server = StoppableHTTPServer()
         cls.server.start()
+        cls.ssl_server = StoppableHTTPServer(do_ssl=True)
+        cls.ssl_server.start()
 
     @classmethod
     def tearDown(cls):
+        cls.ssl_server.shutdown()
         cls.server.shutdown()
 
     @classmethod
-    def setUpTest(cls):
+    def testSetUp(cls):
         cls.server.reset()
+        cls.ssl_server.reset()
