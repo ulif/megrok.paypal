@@ -4,6 +4,15 @@ import unittest
 from megrok.paypal.testing import http_server
 
 
+class TestHTTPServerContextManager(unittest.TestCase):
+
+    def test_http_server(self):
+        # we can use the http_server context manager
+        with http_server() as server:
+            response = requests.get(server.url)
+        self.assertEqual(response.text, 'Ok')
+
+
 class TestFakePaypalServer(unittest.TestCase):
 
     def test_get(self):
