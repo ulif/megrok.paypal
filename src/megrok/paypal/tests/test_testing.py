@@ -1,7 +1,8 @@
 # tests for testing.
 import requests
 import unittest
-from megrok.paypal.testing import http_server
+from megrok.paypal.testing import (
+    http_server, StoppableHTTPServer, HTTPServerLayer)
 
 
 class TestHTTPServerContextManager(unittest.TestCase):
@@ -13,13 +14,22 @@ class TestHTTPServerContextManager(unittest.TestCase):
         self.assertEqual(response.text, 'Ok')
 
 
-class TestFakePaypalServer(unittest.TestCase):
+class TestStoppableHTTPServer(unittest.TestCase):
+
+    layer = HTTPServerLayer
 
     def test_get(self):
         # we can GET docs from server
-        with http_server() as server:
-            response = requests.get(server.url)
+        response = requests.get(self.layer.server.url)
         self.assertEqual(response.text, 'Ok')
+
+    def test_post(self):
+        # we can POST data to server
+        response = requests.post(self.layer.server.url)
+        self.assertEqual(response.text, u'VERIFIED')
+
+
+class TestFakePaypalServer(object): #unittest.TestCase):
 
     def test_post(self):
         # we can POST data to server
