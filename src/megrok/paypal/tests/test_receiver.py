@@ -74,6 +74,17 @@ class TestInstantPaymentNotfication(unittest.TestCase):
         assert ipn.data == "some-data"
         assert ipn.timestamp_received == a_timestamp
 
+    def test_constructor_other_timestamps(self):
+        # also the other timestamps can be set initially
+        ts1 = datetime.datetime(2012, 1, 2, 3, 4, 5)
+        ts2 = datetime.datetime(2013, 2, 3, 4, 5, 6)
+        ipn = InstantPaymentNotification(
+            "some-data",
+            timestamp_validation_requested=ts1,
+            timestamp_validation_received=ts2)
+        assert ipn.timestamp_validation_requested == ts1
+        assert ipn.timestamp_validation_received == ts2
+
 
 class SampleApp(grok.Context):
     # a sample context

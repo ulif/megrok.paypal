@@ -35,10 +35,14 @@ class InstantPaymentNotification(grok.Model):
     timestamp_validation_requested = None
     timestamp_validation_received = None
 
-    def __init__(self, data=None, timestamp_received=None):
+    def __init__(self, data=None, timestamp_received=None,
+                 timestamp_validation_requested=None,
+                 timestamp_validation_received=None):
         self.data = data
         self.timestamp_received = (
             timestamp_received or datetime.datetime.utcnow())
+        self.timestamp_validation_requested = timestamp_validation_requested
+        self.timestamp_validation_received = timestamp_validation_received
 
 
 class PayPalIPNReceiver(grok.Container):
