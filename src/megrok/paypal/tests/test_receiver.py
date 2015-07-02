@@ -1,4 +1,5 @@
 # Tests for IPN- and other receivers
+import datetime
 import grok
 import unittest
 import megrok.paypal.tests
@@ -64,6 +65,14 @@ class TestInstantPaymentNotfication(unittest.TestCase):
         ipn = InstantPaymentNotification("some-data")
         assert ipn.data == "some-data"
         assert ipn.timestamp_received is not None
+
+    def test_constructor_timestamp_received(self):
+        # we can set the `timestamp_received` initially.
+        a_timestamp = datetime.datetime(2012, 12, 1, 10, 11, 12)
+        ipn = InstantPaymentNotification(
+            "some-data", timestamp_received=a_timestamp)
+        assert ipn.data == "some-data"
+        assert ipn.timestamp_received == a_timestamp
 
 
 class SampleApp(grok.Context):
