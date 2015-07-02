@@ -27,7 +27,8 @@ class InstantPaymentNotification(grok.Model):
     If `data` is given at construction time, we also set a timestamp of
     current datetime (UTC).
 
-    Timestamps and final verdict can also be set via constructor.
+    Timestamps and final verdict can also be set via constructor (but won't
+    be set automatically).
     """
     grok.implements(IInstantPaymentNotification)
 
@@ -36,8 +37,9 @@ class InstantPaymentNotification(grok.Model):
                  timestamp_validation_received=None,
                  final_verdict=None):
         self.data = data
-        self.timestamp_received = (
-            timestamp_received or datetime.datetime.utcnow())
+        if self.data and not timestamp_received:
+            timestamp_received = datetime.datetime.utcnow()
+        self.timestamp_received = timestamp_received
         self.timestamp_validation_requested = timestamp_validation_requested
         self.timestamp_validation_received = timestamp_validation_received
         self.final_verdict = final_verdict

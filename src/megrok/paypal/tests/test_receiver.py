@@ -94,6 +94,12 @@ class TestInstantPaymentNotfication(unittest.TestCase):
             "some-data", final_verdict="youre lost")
         assert ipn.final_verdict == "youre lost"
 
+    def test_constructor_auto_timestamp_only_with_data(self):
+        # we set the timestamp_received only iff there is data and
+        # no other timestamp_received passed in
+        ipn = InstantPaymentNotification(None)
+        assert ipn.timestamp_received is None
+
 
 class SampleApp(grok.Context):
     # a sample context
