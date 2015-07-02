@@ -47,8 +47,8 @@ class PayPalIPNReceiver(grok.Container):
 
     validation_url = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
 
-    def got_notification(self, post_var_string):
-        """The receiver got an instant payment notification (IPN).
+    def store_notification(self, post_var_string):
+        """Store an instant payment notification (IPN).
 
         The `post_var_string` is the data payload sent by the notification.
         """
@@ -81,7 +81,7 @@ class NotifyView(grok.View):
 
     def update(self):
         body_data = self.request.bodyStream.getCacheStream().read()
-        self.context.got_notification(body_data)
+        self.context.store_notification(body_data)
 
     def render(self):
         return ''

@@ -846,8 +846,8 @@ class IPayPalIPNReceiver(Interface):
         required=True,
     )
 
-    def got_notification(post_var_string):
-        """The receiver got an instant payment notification (IPN).
+    def store_notification(post_var_string):
+        """Store a notification text.
         """
 
     def validate(post_var_string):

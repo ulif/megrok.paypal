@@ -97,7 +97,7 @@ class ModifiedReceiver(PayPalIPNReceiver):
 
     call_args = None
 
-    def got_notification(self, post_var_string):
+    def store_notification(self, post_var_string):
         self.call_args = post_var_string
 
 
@@ -218,7 +218,7 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         browser.open('http://localhost/app/@@index')
         assert browser.contents == ''
 
-    def test_index_calls_got_notification(self):
+    def test_index_calls_store_notification(self):
         # the index view informs the receiver.
         receiver = ModifiedReceiver()
         receiver.validation_url = ''
