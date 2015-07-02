@@ -26,23 +26,21 @@ class InstantPaymentNotification(grok.Model):
 
     If `data` is given at construction time, we also set a timestamp of
     current datetime (UTC).
+
+    Timestamps and final verdict can also be set via constructor.
     """
     grok.implements(IInstantPaymentNotification)
 
-    data = None
-    final_verdict = None
-    timestamp_received = None
-    timestamp_validation_requested = None
-    timestamp_validation_received = None
-
     def __init__(self, data=None, timestamp_received=None,
                  timestamp_validation_requested=None,
-                 timestamp_validation_received=None):
+                 timestamp_validation_received=None,
+                 final_verdict=None):
         self.data = data
         self.timestamp_received = (
             timestamp_received or datetime.datetime.utcnow())
         self.timestamp_validation_requested = timestamp_validation_requested
         self.timestamp_validation_received = timestamp_validation_received
+        self.final_verdict = final_verdict
 
 
 class PayPalIPNReceiver(grok.Container):

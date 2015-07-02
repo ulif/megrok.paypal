@@ -65,6 +65,9 @@ class TestInstantPaymentNotfication(unittest.TestCase):
         ipn = InstantPaymentNotification("some-data")
         assert ipn.data == "some-data"
         assert ipn.timestamp_received is not None
+        assert ipn.timestamp_validation_requested is None
+        assert ipn.timestamp_validation_received is None
+        assert ipn.final_verdict is None
 
     def test_constructor_timestamp_received(self):
         # we can set the `timestamp_received` initially.
@@ -84,6 +87,12 @@ class TestInstantPaymentNotfication(unittest.TestCase):
             timestamp_validation_received=ts2)
         assert ipn.timestamp_validation_requested == ts1
         assert ipn.timestamp_validation_received == ts2
+
+    def test_constructor_final_verdict(self):
+        # we can pass in a verdict in constructor
+        ipn = InstantPaymentNotification(
+            "some-data", final_verdict="youre lost")
+        assert ipn.final_verdict == "youre lost"
 
 
 class SampleApp(grok.Context):
