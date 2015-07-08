@@ -14,8 +14,15 @@ IPN simulator:
 import datetime
 import grok
 import requests
+import uuid
 from megrok.paypal.interfaces import (
     IPayPalIPNReceiver, IInstantPaymentNotification)
+
+
+def get_uuid():
+    """The central place where we generate UUIDs.
+    """
+    return uuid.uuid4()
 
 
 class InstantPaymentNotification(grok.Model):

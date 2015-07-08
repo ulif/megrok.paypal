@@ -11,11 +11,22 @@ from zope.testbrowser.wsgi import Browser
 from megrok.paypal.interfaces import (
     IPayPalIPNReceiver, IInstantPaymentNotification, )
 from megrok.paypal.receiver import (
-    PayPalIPNReceiver, InstantPaymentNotification, )
+    PayPalIPNReceiver, InstantPaymentNotification, get_uuid)
 from megrok.paypal.testing import http_server
 
 
 FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
+
+
+class TestHelpers(unittest.TestCase):
+
+    def test_get_uuid(self):
+        # we can get uuids
+        assert get_uuid() is not None
+
+    def test_get_uuid_creates_unique_ids(self):
+        # generated ids are different
+        assert get_uuid() != get_uuid()
 
 
 class TestPayPalIPNReceiver(unittest.TestCase):
