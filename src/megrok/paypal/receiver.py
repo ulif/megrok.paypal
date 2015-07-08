@@ -52,7 +52,7 @@ class PayPalIPNReceiver(grok.Container):
 
     validation_url = "https://www.sandbox.paypal.com/cgi-bin/webscr/"
 
-    def store_notification(self, post_var_string):
+    def store_notification(self, post_var_string, uuid=None):
         """Store an instant payment notification (IPN).
 
         The `post_var_string` is the data payload sent by the notification.

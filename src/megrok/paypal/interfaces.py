@@ -846,8 +846,12 @@ class IPayPalIPNReceiver(Interface):
         required=True,
     )
 
-    def store_notification(post_var_string):
+    def store_notification(post_var_string, uuid=None):
         """Store a notification text.
+
+        Stores `post_var_string` under name `uuid`. If no `uuid` is
+        given, we generate one. Returns the `uuid` passed in or
+        generated.
         """
 
     def validate(post_var_string):
