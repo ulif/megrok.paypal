@@ -62,6 +62,17 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         assert result == "VERIFIED"
         assert sent_body == 'cmd=_notify-validate&some-fake-data'
 
+    def test_store_notification_returns_uuid(self):
+        # `store_notification` returns a UUID
+        receiver = PayPalIPNReceiver()
+        uuid = receiver.store_notification("sample-string")
+        assert uuid is not None
+
+    def test_store_notification_returns_passed_in_uuid(self):
+        # we get back our own UUID if we pass one in
+        receiver = PayPalIPNReceiver()
+        uuid = receiver.store_notification("sample-string", uuid=u"blah")
+        assert uuid == u"blah"
 
 class TestInstantPaymentNotfication(unittest.TestCase):
 

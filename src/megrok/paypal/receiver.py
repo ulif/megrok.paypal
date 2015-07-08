@@ -64,7 +64,10 @@ class PayPalIPNReceiver(grok.Container):
 
         The `post_var_string` is the data payload sent by the notification.
         """
-        pass
+        notification = InstantPaymentNotification(data=post_var_string)
+        if uuid is None:
+            uuid = get_uuid()
+        return uuid
 
     def validate(self, post_var_string):
         """Ask Paypal for validation.
