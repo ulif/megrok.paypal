@@ -78,6 +78,14 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         uuid = receiver.store_notification("sample-string", uuid="blah")
         assert uuid == u"blah"
 
+    def test_store_notification_stores_notification(self):
+        # notifications are really stored
+        receiver = PayPalIPNReceiver()
+        receiver.store_notification("sample-string", uuid="my-uuid")
+        assert "my-uuid" in receiver
+        stored = receiver["my-uuid"]
+        assert isinstance(stored, InstantPaymentNotification)
+
 
 class TestInstantPaymentNotfication(unittest.TestCase):
 
