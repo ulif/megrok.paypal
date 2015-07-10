@@ -28,6 +28,10 @@ class TestHelpers(unittest.TestCase):
         # generated ids are different
         assert get_uuid() != get_uuid()
 
+    def test_get_uuid_creates_strings(self):
+        # we want regular strings
+        assert isinstance(get_uuid(), str)
+
 
 class TestPayPalIPNReceiver(unittest.TestCase):
 

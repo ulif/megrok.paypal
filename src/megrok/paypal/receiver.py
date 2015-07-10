@@ -22,7 +22,7 @@ from megrok.paypal.interfaces import (
 def get_uuid():
     """The central place where we generate UUIDs.
     """
-    return uuid.uuid4()
+    return uuid.uuid4().hex
 
 
 class InstantPaymentNotification(grok.Model):
@@ -67,6 +67,7 @@ class PayPalIPNReceiver(grok.Container):
         notification = InstantPaymentNotification(data=post_var_string)
         if uuid is None:
             uuid = get_uuid()
+        self[uuid] = notification
         return uuid
 
     def validate(self, post_var_string):
