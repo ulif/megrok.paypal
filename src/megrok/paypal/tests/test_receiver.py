@@ -78,6 +78,7 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         uuid = receiver.store_notification("sample-string", uuid=u"blah")
         assert uuid == u"blah"
 
+
 class TestInstantPaymentNotfication(unittest.TestCase):
 
     def test_iface(self):
