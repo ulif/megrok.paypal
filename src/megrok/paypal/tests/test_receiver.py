@@ -75,7 +75,7 @@ class TestPayPalIPNReceiver(unittest.TestCase):
     def test_store_notification_returns_passed_in_uuid(self):
         # we get back our own UUID if we pass one in
         receiver = PayPalIPNReceiver()
-        uuid = receiver.store_notification("sample-string", uuid=u"blah")
+        uuid = receiver.store_notification("sample-string", uuid="blah")
         assert uuid == u"blah"
 
 
