@@ -11,6 +11,7 @@ try:                        # Python 3.x
     from http.server import BaseHTTPRequestHandler
 except ImportError:         # Python 2.x
     from BaseHTTPServer import BaseHTTPRequestHandler
+from zope.app.wsgi.testlayer import BrowserLayer
 
 
 CERTFILE = os.path.join(
@@ -137,3 +138,27 @@ class HTTPServerLayer(object):
     def testSetUp(cls):
         cls.server.reset()
         cls.ssl_server.reset()
+
+
+class BrowserHTTPServerLayer(BrowserLayer, HTTPServerLayer):
+    """A 'functional' test layer with real HTTP servers.
+
+    A layer that supports `mechanize`-based browsers, but also provides
+    a real HTTP(S) server that can be used for pseudo requests to
+    paypal. Please see `BrowserLayer` and `HTTPServerLayer` for details.
+
+    Probably most interesting attributes/methods, this layer provides:
+
+      `server` - a running HTTP server with a `paypal_mode` and a `url`.
+
+      `ssl_server` - same as above, but the HTTPS variant.
+
+      `get_root_folder()` - get the root folder of a set up ZODB.
+
+    You can create an instance of this layer like::
+
+      MyLayer = BrowserHTTPServerLayer(
+                   <path-to-pkg-with-ftesting.zcml>, <zcml-filename>)
+
+    """
+    pass
