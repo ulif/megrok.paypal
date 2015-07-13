@@ -3,7 +3,6 @@ import datetime
 import grok
 import unittest
 import megrok.paypal.tests
-from zope.app.wsgi.testlayer import BrowserLayer
 from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass, verifyObject
 from zope.publisher.browser import TestRequest
@@ -12,10 +11,11 @@ from megrok.paypal.interfaces import (
     IPayPalIPNReceiver, IInstantPaymentNotification, )
 from megrok.paypal.receiver import (
     PayPalIPNReceiver, InstantPaymentNotification, get_uuid)
-from megrok.paypal.testing import http_server
+from megrok.paypal.testing import http_server, BrowserHTTPServerLayer
 
 
-FunctionalLayer = BrowserLayer(megrok.paypal.tests, 'ftesting.zcml')
+FunctionalHTTPLayer = BrowserHTTPServerLayer(
+    megrok.paypal.tests, 'ftesting.zcml')
 
 
 class TestHelpers(unittest.TestCase):
@@ -205,7 +205,7 @@ class FakePayPalView(grok.View):
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
-    layer = FunctionalLayer
+    layer = FunctionalHTTPLayer
 
     def setUp(self):
         # grok ourselves to get views etc, registered
