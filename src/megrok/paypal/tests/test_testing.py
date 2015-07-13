@@ -52,3 +52,13 @@ class TestStoppableHTTPServer(unittest.TestCase):
         self.layer.server.paypal_mode = 'invalid'
         response = requests.post(self.layer.server.url)
         self.assertEqual(response.text, u'INVALID')
+
+    def test_reset(self):
+        # make sure, reset() really resets all relevan attributes.
+        self.layer.server.paypal_mode = 'foo'
+        self.layer.server.last_request_body = 'bar'
+        self.layer.server.last_request_content_type = 'baz'
+        self.layer.server.reset()
+        assert self.layer.server.paypal_mode == 'valid'
+        assert self.layer.server.last_request_body is None
+        assert self.layer.server.last_request_content_type is None

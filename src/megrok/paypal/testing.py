@@ -98,6 +98,8 @@ class StoppableHTTPServer(TCPServer):
         """Set default values.
         """
         self.paypal_mode = 'valid'
+        self.last_request_body = None
+        self.last_request_content_type = None
 
 
 @contextmanager
@@ -120,7 +122,7 @@ class HTTPServerLayer(object):
     latter one, `ssl_server`, talks over SSL.
 
     Before each test we reset servers to default values
-    (paypal_mode="valid").
+    (paypal_mode="valid", delete last request values, etc.).
     """
     @classmethod
     def setUp(cls):
