@@ -155,7 +155,7 @@ class BrowserHTTPServerLayer(BrowserLayer, HTTPServerLayer):
 
       `ssl_server` - same as above, but the HTTPS variant.
 
-      `get_root_folder()` - get the root folder of a set up ZODB.
+      `getRootFolder()` - get the root folder of a set up ZODB.
 
     You can create an instance of this layer like::
 
