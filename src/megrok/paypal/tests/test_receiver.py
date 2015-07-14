@@ -11,11 +11,8 @@ from megrok.paypal.interfaces import (
     IPayPalIPNReceiver, IInstantPaymentNotification, )
 from megrok.paypal.receiver import (
     PayPalIPNReceiver, InstantPaymentNotification, get_uuid)
-from megrok.paypal.testing import http_server, BrowserHTTPServerLayer
-
-
-FunctionalHTTPLayer = BrowserHTTPServerLayer(
-    megrok.paypal.tests, 'ftesting.zcml')
+from megrok.paypal.testing import http_server
+from megrok.paypal.testlayer import browser_http_layer
 
 
 class TestHelpers(unittest.TestCase):
@@ -205,7 +202,7 @@ class FakePayPalView(grok.View):
 
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
-    layer = FunctionalHTTPLayer
+    layer = browser_http_layer
 
     def setUp(self):
         # grok ourselves to get views etc, registered
@@ -317,44 +314,14 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         receiver.validation_url = None
         assert receiver.validate('x=1') is None
 
-    def test_fake_paypal_success(self):
-        # we can use FakePayPal for testing successful validations
-        fake_paypal = FakePayPal(mode='success')
+    def test_notify_view_validation_valid(self):
+        # we can get successful validations with notify
+        receiver = PayPalIPNReceiver()
+        receiver.validation_url = self.layer.server.url
         root = self.layer.getRootFolder()
-        root['fake_paypal'] = fake_paypal
+        root['app'] = receiver
         browser = Browser()
-        browser.post('http://localhost/fake_paypal/@@index', 'x=2')
-        assert browser.contents == 'VERIFIED'
-        assert fake_paypal.last_request == (
-            'BODY: x=2\n'
-            'CONTENT_TYPE: application/x-www-form-urlencoded'
-            )
-
-    def test_fake_paypal_fail(self):
-        # we can use FakePayPal for testing failed validations
-        fake_paypal = FakePayPal(mode='fail')
-        root = self.layer.getRootFolder()
-        root['fake_paypal'] = fake_paypal
-        browser = Browser()
-        browser.post('http://localhost/fake_paypal/@@index', 'x=3')
-        assert browser.contents == 'INVALID'
-        assert fake_paypal.last_request == (
-            'BODY: x=3\n'
-            'CONTENT_TYPE: application/x-www-form-urlencoded'
-            )
-
-    def test_fake_paypal_mirror(self):
-        # we can use FakePayPal for mirroring our posts
-        fake_paypal = FakePayPal(mode='mirror')
-        root = self.layer.getRootFolder()
-        root['fake_paypal'] = fake_paypal
-        browser = Browser()
-        browser.post('http://localhost/fake_paypal/@@index', 'x=4')
-        assert browser.contents == (
-            'BODY: x=4\n'
-            'CONTENT_TYPE: application/x-www-form-urlencoded'
-            )
-        assert fake_paypal.last_request == (
-            'BODY: x=4\n'
-            'CONTENT_TYPE: application/x-www-form-urlencoded'
-            )
+        browser.post('http://localhost/app/@@index', 'x=2')
+        sent_body = self.layer.server.last_request_body
+        assert browser.headers.get("status") == "200 Ok"
+        assert sent_body == 'cmd=_notify-validate&x=2'
