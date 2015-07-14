@@ -142,7 +142,7 @@ class HTTPServerLayer(object):
         cls.ssl_server.reset()
 
 
-class BrowserHTTPServerLayer(BrowserLayer, HTTPServerLayer):
+class BrowserHTTPServerLayer(BrowserLayer):
     """A 'functional' test layer with real HTTP servers.
 
     A layer that supports `mechanize`-based browsers, but also provides
@@ -162,5 +162,21 @@ class BrowserHTTPServerLayer(BrowserLayer, HTTPServerLayer):
       MyLayer = BrowserHTTPServerLayer(
                    <path-to-pkg-with-ftesting.zcml>, <zcml-filename>)
 
+    We provide one such layer in the `testlayer` module.
     """
-    pass
+    def setUp(self):
+        super(BrowserHTTPServerLayer, self).setUp()
+        self.server = StoppableHTTPServer()
+        self.server.start()
+        self.ssl_server = StoppableHTTPServer(do_ssl=True)
+        self.ssl_server.start()
+
+    def tearDown(self):
+        self.ssl_server.shutdown()
+        self.server.shutdown()
+        super(BrowserHTTPServerLayer, self).tearDown()
+
+    def testSetUp(self):
+        super(BrowserHTTPServerLayer, self).testSetUp()
+        self.server.reset()
+        self.ssl_server.reset()
