@@ -98,6 +98,7 @@ class NotifyView(grok.View):
     def update(self):
         body_data = self.request.bodyStream.getCacheStream().read()
         self.context.store_notification(body_data)
+        return self.context.validate(body_data)
 
     def render(self):
         return ''
