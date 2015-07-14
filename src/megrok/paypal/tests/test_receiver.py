@@ -63,6 +63,17 @@ class TestPayPalIPNReceiver(unittest.TestCase):
         assert result == "VERIFIED"
         assert sent_body == 'cmd=_notify-validate&some-fake-data'
 
+    def test_validate_invlid(self):
+        # we get it if a payment notification is invalid
+        receiver = PayPalIPNReceiver()
+        result = None
+        with http_server(paypal_mode='invalid') as server:
+            receiver.validation_url = server.url
+            result = receiver.validate('some-fake-data')
+            sent_body = server.last_request_body
+        assert result == "INVALID"
+        assert sent_body == 'cmd=_notify-validate&some-fake-data'
+
     def test_store_notification_returns_uuid(self):
         # `store_notification` returns a UUID
         receiver = PayPalIPNReceiver()
