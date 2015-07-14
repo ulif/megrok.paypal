@@ -168,38 +168,6 @@ class ModifiedReceiver(PayPalIPNReceiver):
         self.call_args = post_var_string
 
 
-class FakePayPal(grok.Model):
-    # a fake paypal to send ipns to.
-
-    # in `last_request` we store the last request received.
-    last_request = None
-
-    def __init__(self, mode='success'):
-        # mode can be 'success',  'fail', or 'mirror'. 'mirror' means:
-        # send back a body with received headers and body
-        # data. 'success' and 'fail' should trigger to mimic positive
-        # or negative validations.
-        self.mode = mode
-
-
-class FakePayPalView(grok.View):
-    grok.name('index')
-    grok.context(FakePayPal)
-
-    def mirror(self):
-        body_data = self.request.bodyStream.getCacheStream().read()
-        content_type = self.request.headers.get("Content-Type")
-        return 'BODY: %s\nCONTENT_TYPE: %s' % (body_data, content_type)
-
-    def render(self):
-        self.context.last_request = self.mirror()
-        if self.context.mode == 'success':
-            return 'VERIFIED'
-        elif self.context.mode == 'mirror':
-            return self.context.last_request
-        return 'INVALID'
-
-
 class TestPayPalIPNReceiverFunctional(unittest.TestCase):
 
     layer = browser_http_layer
