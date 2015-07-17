@@ -304,3 +304,6 @@ class TestPayPalIPNReceiverFunctional(unittest.TestCase):
         sent_body = self.layer.server.last_request_body
         assert browser.headers.get("status") == "200 Ok"
         assert sent_body == 'cmd=_notify-validate&x=2'
+        assert len(list(receiver.keys())) == 1
+        notification = receiver[receiver.keys()[0]]
+        assert notification.final_verdict == u'VERIFIED'
